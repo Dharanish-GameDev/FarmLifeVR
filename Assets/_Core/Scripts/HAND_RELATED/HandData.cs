@@ -1,25 +1,29 @@
 using UnityEngine;
 
-public class HandData : MonoBehaviour
+namespace FARMLIFEVR.HANDS
 {
-    public enum HandModelType { LeftHand, RightHand }
+    public class HandData : MonoBehaviour
+    {
+        public enum HandModelType { LeftHand, RightHand }
 
-    [SerializeField] private HandModelType handModelType;
-    [SerializeField] private Animator animator;
-    [SerializeField] private Transform root;
-    [SerializeField] private Transform[] fingerBonesTransformArray;
+        [SerializeField] private HandModelType handModelType;
+        [SerializeField] private Animator animator;
+        [SerializeField] private Transform root;
+        [SerializeField] private Transform[] fingerBonesTransformArray;
 
-    #region Private Variables
+        #region Private Variables
 
-    public Transform[] FingerBonesTransformArray => fingerBonesTransformArray;
-    public Transform Root => root;
+        public Transform[] FingerBonesTransformArray => fingerBonesTransformArray;
+        public Transform Root => root;
 
-    #endregion
+        #endregion
 
-    #region Properties
+        #region Properties
 
-    public Animator Animator => animator;
-    public HandModelType handType => handModelType;
+        public Animator Animator => animator;
+        public HandModelType handType => handModelType;
 
-    #endregion
+        #endregion
+    }
 }
+

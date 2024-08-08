@@ -1,3 +1,28 @@
 FARMLIFE VR NAMESPACES
 
 1. FARMLIFEVR.OXEN
+{
+.OxenMover
+.OxenTurnDetector
+.OxenBoundary
+.OxenMover
+}
+
+2. FARMLIFEVR.LAND
+{
+.Land
+.LandPlougher
+}
+
+3. FARMLIFEVR.HANDS
+{
+.HandData
+.HandAnimator
+.CustomGrabPose
+}
+
+4. FARMLIFEVR.INPUT
+{
+.ControllerInputManager
+.ToggleRayInteractor
+}

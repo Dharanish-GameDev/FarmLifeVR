@@ -1,4 +1,4 @@
 FARMLIFE VR COMMANDS LIST
 
 1.Ox_Mover 
-.StartUTurn(bool turn180)
+.StartUTurn(bool turnLeft)
