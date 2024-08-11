@@ -2023,6 +2023,7 @@ MonoBehaviour:
   uTurnOffset: 1
   turnSpeed: 6
   moveSpeed: 1
+  noOfTurnWayPoints: 10
   oxenTurnDetector: {fileID: 619987747}
 --- !u!4 &619987746
 Transform:
@@ -2062,6 +2063,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   offset: {x: 0, y: 1, z: 1.66}
+  overLapBoxGizmoColor: {r: 0, g: 0, b: 0, a: 0}
+  hitColliders:
+  - {fileID: 0}
 --- !u!1 &735740056
 GameObject:
   m_ObjectHideFlags: 0
@@ -4040,7 +4044,7 @@ PrefabInstance:
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000045776367
+      value: -0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}

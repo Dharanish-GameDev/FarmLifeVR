@@ -1,0 +1,4 @@
+Cattle - Base Class
+
+Hen :: Cattle
+Cow :: Cattle 
