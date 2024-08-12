@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour
@@ -107,4 +108,22 @@ public class TimeManager : MonoBehaviour
             yield return null;
         }
     }
+
+    private void ResetSkyBox()
+    {
+        RenderSettings.skybox.SetTexture("_Texture1", skyboxNight);
+        RenderSettings.skybox.SetTexture("_Texture2", skyboxSunrise);
+        RenderSettings.skybox.SetFloat("_Blend", 0);
+    }
+
+#if UNITY_EDITOR
+
+    [MenuItem("Tools/Reset Light")]
+    public static void ResetLight()
+    {
+        TimeManager timeManager = Selection.activeGameObject.GetComponent<TimeManager>();
+        timeManager.ResetSkyBox();
+    }
+
+#endif
 }
