@@ -26,3 +26,9 @@ FARMLIFE VR NAMESPACES
 .ControllerInputManager
 .ToggleRayInteractor
 }
+
+5. FARMLIFEVR.STATEMACHINE
+{
+.BaseState
+.StateManager
+}
