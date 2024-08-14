@@ -32,3 +32,11 @@ FARMLIFE VR NAMESPACES
 .BaseState
 .StateManager
 }
+
+6.FARMLIFEVR.EVENTSYSTEM
+{
+ .EventManager
+ .EventNames
+
+ (Note : Both are static classes)
+}

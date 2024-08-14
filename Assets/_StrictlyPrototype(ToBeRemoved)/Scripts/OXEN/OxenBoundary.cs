@@ -20,7 +20,7 @@ namespace FARMLIFEVR.OXEN
 
         private void Awake()
         {
-
+            
         }
         private void Start()
         {
@@ -30,7 +30,11 @@ namespace FARMLIFEVR.OXEN
         {
 
         }
-
+        private void OnDisable()
+        {
+            
+        }
+        
         #endregion
 
         #region Private Methods
@@ -40,7 +44,7 @@ namespace FARMLIFEVR.OXEN
 
         #region Public Methods
 
-
+       
         #endregion
     }
     public enum OxenBoundaryType

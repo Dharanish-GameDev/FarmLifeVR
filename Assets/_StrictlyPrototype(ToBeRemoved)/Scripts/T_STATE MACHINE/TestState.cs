@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using FARMLIFEVR.STATEMACHINE;
 
 public abstract class TestState : BaseState<TestStateMachine.ETestState>
 {
