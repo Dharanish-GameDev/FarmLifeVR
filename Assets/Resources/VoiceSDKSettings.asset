@@ -33,9 +33,9 @@ MonoBehaviour:
     isPrivate: 1
     createdAt: 2024-08-13T20:59:15-0700
     trainingStatus: 1
-    lastTrainDuration: 48
-    lastTrainedAt: 2024-08-15T10:53:17-0700
-    nextTrainAt: 2024-08-15T10:52:29-0700
+    lastTrainDuration: 66
+    lastTrainedAt: 2024-08-15T11:54:42-0700
+    nextTrainAt: 2024-08-15T11:53:36-0700
     intents:
     - id: 3930206533969818
       name: call_pet
@@ -603,7 +603,5 @@ MonoBehaviour:
   isDemoOnly: 0
   useConduit: 1
   _manifestLocalPath: ConduitManifest-336b6933-f9a5-4cc8-9538-f7b7940292f6.json
-  excludedAssemblies:
-  - Oculus.Voice.Demo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  - Meta.WitAi.Samples, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  excludedAssemblies: []
   relaxedResolution: 0

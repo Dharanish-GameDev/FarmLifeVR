@@ -31,14 +31,21 @@ namespace FARMLIFEVR.EVENTSYSTEM
             }
         }
 
-        // Trigger an event with dynamic parameters
+        // Trigger an event with dynamic parameters and auto-cleanup of invalid listeners
         public static void TriggerEvent(string eventName, params object[] parameters)
         {
             if (eventDictionary.TryGetValue(eventName, out var listeners))
             {
+                List<Delegate> invalidListeners = new List<Delegate>();
+
                 foreach (var listener in listeners)
                 {
-                    if (listener is Action<object[]> action)
+                    if (listener.Target.Equals(null))
+                    {
+                        // Add invalid listeners to remove list
+                        invalidListeners.Add(listener);
+                    }
+                    else if (listener is Action<object[]> action)
                     {
                         try
                         {
@@ -49,6 +56,18 @@ namespace FARMLIFEVR.EVENTSYSTEM
                             Debug.LogError($"Error invoking event '{eventName}': {ex.Message}");
                         }
                     }
+                }
+
+                // Remove invalid listeners
+                foreach (var invalidListener in invalidListeners)
+                {
+                    listeners.Remove(invalidListener);
+                }
+
+                // Clean up if no listeners remain
+                if (listeners.Count == 0)
+                {
+                    eventDictionary.Remove(eventName);
                 }
             }
         }
@@ -72,4 +91,3 @@ namespace FARMLIFEVR.EVENTSYSTEM
         }
     }
 }
-

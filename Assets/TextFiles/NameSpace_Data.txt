@@ -35,8 +35,22 @@ FARMLIFE VR NAMESPACES
 
 6.FARMLIFEVR.EVENTSYSTEM
 {
- .EventManager
- .EventNames
+ .static EventManager
+ .static EventNames
+}
 
- (Note : Both are static classes)
+7.FARMLIFEVR.VOICEEXPERIENCE
+{
+  .VoiceIntentController
+}
+
+8.FARMLIFEVR.CATTLES.DOG
+{
+ .DogBaseState
+ .DogStateMachine
+ .DogStateContext
+  States
+  {
+    DogIdle
+  }
 }
