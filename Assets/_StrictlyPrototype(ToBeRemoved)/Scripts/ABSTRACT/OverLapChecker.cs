@@ -1,17 +1,50 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class OverLapChecker : MonoBehaviour
 {
+    public enum E_OverLapCheckingType
+    {
+        OnlyWhenCalled,
+        PerInterval
+    }
+
+    public enum E_OverLapShape
+    {
+        Box,
+        Sphere,
+        Capsule
+    }
+
     #region Private Variables
+
+    [Header("Overlap Checking Properties")]
+    [Space(5)]
+
+    [Tooltip("It Determines how often we check the Overlap")]
+    [SerializeField] private E_OverLapCheckingType overLapCheckingType;
+
+    [Tooltip("Its the Shape of the Overlap checker")]
+    [SerializeField] private E_OverLapShape overLapShape;
 
     [Header("Values")]
     [Space(5)]
     [Tooltip("Time Interval Before another Overlap Check")]
     [SerializeField] private float interval = 0.2f; // Interval in seconds
 
+    [ConditionalField("overLapShape", E_OverLapShape.Box)]
     [SerializeField] private Vector3 boxSize = new Vector3(1f, 1f, 1f); // Size of the box for the overlap check
+
+    [ConditionalField("overLapShape", E_OverLapShape.Sphere)]
+    [SerializeField] private float sphereRadius = 1f; // Radius of the sphere for overlap check
+
+    [ConditionalField("overLapShape", E_OverLapShape.Capsule)]
+    [SerializeField] private float capsuleRadius = 1f; // Radius of the capsule for overlap check
+    [ConditionalField("overLapShape", E_OverLapShape.Capsule)]
+    [SerializeField] private float capsuleHeight = 2f; // Height of the capsule for overlap check
+
     [SerializeField] private LayerMask hitLayers; // Layers to consider for overlap checks
 
     [Tooltip("Position Offset that will be added to the Current Position for checking Overlap")]
@@ -20,7 +53,7 @@ public abstract class OverLapChecker : MonoBehaviour
 #if UNITY_EDITOR
     [Space(5)]
     [Header("For Debugging")]
-    [SerializeField] private Color overLapBoxGizmoColor;
+    [SerializeField] private Color overLapGizmoColor;
 #endif
 
     protected bool onHitCalled = false; // To track if the onHit callback has been called
@@ -36,48 +69,88 @@ public abstract class OverLapChecker : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(CheckOverlapBoxEveryInterval());
+        if (overLapCheckingType == E_OverLapCheckingType.PerInterval)
+            StartCoroutine(CheckOverlapEveryInterval());
     }
 
     #endregion
 
     #region Private Methods
 
-    private IEnumerator CheckOverlapBoxEveryInterval()
+    private IEnumerator CheckOverlapEveryInterval()
     {
         while (true)
         {
-            // Calculate the position of the box
-            boxCenter = transform.position + transform.rotation * offset;
-
-            // Perform the overlap box check with the rotation of the GameObject
-            numHits = Physics.OverlapBoxNonAlloc(boxCenter, boxSize / 2, hitColliders, transform.rotation, hitLayers);
-
-            // Detect new hits
-            for (int i = 0; i < numHits; i++)
-            {
-                var collider = hitColliders[i];
-
-                if (collider != null && !previousColliders.Contains(collider))
-                {
-                    previousColliders.Add(collider);
-                    HitCallBack(collider);
-                }
-            }
-
-            // Remove colliders that are no longer overlapping
-            previousColliders.RemoveWhere(collider => !IsStillOverlapping(collider));
-
+            PerformOverlapCheck();
             yield return new WaitForSeconds(interval);
         }
     }
 
-    // Check if a collider is still overlapping
-    private bool IsStillOverlapping(Collider collider)
+    private void PerformOverlapCheck()
     {
-        return Physics.OverlapBoxNonAlloc(boxCenter, boxSize / 2, hitColliders, transform.rotation, hitLayers) > 0;
+        // Calculate the center position with the offset
+        Vector3 center = transform.position + transform.rotation * offset;
+        numHits = PerformShapeOverlapCheck(center);
+
+        // Detect new hits
+        ProcessDetectedColliders();
     }
 
+    private int PerformShapeOverlapCheck(Vector3 center)
+    {
+        switch (overLapShape)
+        {
+            case E_OverLapShape.Box:
+                return Physics.OverlapBoxNonAlloc(center, boxSize / 2, hitColliders, transform.rotation, hitLayers);
+
+            case E_OverLapShape.Sphere:
+                return Physics.OverlapSphereNonAlloc(center, sphereRadius, hitColliders, hitLayers);
+
+            case E_OverLapShape.Capsule:
+                Vector3 point1 = center + transform.up * (capsuleHeight / 2 - capsuleRadius);
+                Vector3 point2 = center - transform.up * (capsuleHeight / 2 - capsuleRadius);
+                return Physics.OverlapCapsuleNonAlloc(point1, point2, capsuleRadius, hitColliders, hitLayers);
+
+            default:
+                Debug.LogWarning("Unsupported overlap shape.");
+                return 0;
+        }
+    }
+
+    private void ProcessDetectedColliders()
+    {
+        for (int i = 0; i < numHits; i++)
+        {
+            var collider = hitColliders[i];
+            if (collider != null)
+            {
+                HitCallBack(collider);
+            }
+        }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    /// <summary>
+    /// Perform an overlap check for a single frame.
+    /// </summary>
+    public void CheckOverlapOnce()
+    {
+        if (overLapCheckingType == E_OverLapCheckingType.OnlyWhenCalled)
+        {
+            PerformOverlapCheck();
+        }
+    }
+
+    #endregion
+
+    #region Abstract Methods
+
+    /// <summary>
+    /// This method must be implemented in derived classes to define the behavior when a hit is detected.
+    /// </summary>
     protected abstract void HitCallBack(Collider collider);
 
     #endregion
@@ -86,11 +159,32 @@ public abstract class OverLapChecker : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // Draw the overlap box in its default color
-        Gizmos.color = overLapBoxGizmoColor;
-        Vector3 boxCenter = transform.position + transform.rotation * offset;
-        Gizmos.matrix = Matrix4x4.TRS(boxCenter, transform.rotation, boxSize);
-        Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
+        Gizmos.color = overLapGizmoColor;
+        Vector3 center = transform.position + transform.rotation * offset;
+
+        switch (overLapShape)
+        {
+            case E_OverLapShape.Box:
+                Gizmos.matrix = Matrix4x4.TRS(center, transform.rotation, boxSize);
+                Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
+                break;
+
+            case E_OverLapShape.Sphere:
+                Gizmos.DrawWireSphere(center, sphereRadius);
+                break;
+
+            case E_OverLapShape.Capsule:
+                Vector3 point1 = center + transform.up * (capsuleHeight / 2 - capsuleRadius);
+                Vector3 point2 = center - transform.up * (capsuleHeight / 2 - capsuleRadius);
+                Gizmos.DrawWireSphere(point1, capsuleRadius);
+                Gizmos.DrawWireSphere(point2, capsuleRadius);
+                Gizmos.DrawLine(point1 + transform.forward * capsuleRadius, point2 + transform.forward * capsuleRadius);
+                Gizmos.DrawLine(point1 - transform.forward * capsuleRadius, point2 - transform.forward * capsuleRadius);
+                Gizmos.DrawLine(point1 + transform.right * capsuleRadius, point2 + transform.right * capsuleRadius);
+                Gizmos.DrawLine(point1 - transform.right * capsuleRadius, point2 - transform.right * capsuleRadius);
+                break;
+        }
     }
+
     #endregion
 }

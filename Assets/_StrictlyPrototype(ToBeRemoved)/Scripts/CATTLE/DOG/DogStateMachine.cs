@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using FARMLIFEVR.STATEMACHINE;
+using FARMLIFEVR.EVENTSYSTEM;
 
 namespace FARMLIFEVR.CATTLES.DOG
 {
@@ -21,6 +22,8 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         [SerializeField][Required] private Animator dogAnimator;
 
+        [SerializeField][Required] private DogOwnerOverLap dogOwnerOverLap;
+
         #endregion
 
         #region Public Variables
@@ -32,8 +35,17 @@ namespace FARMLIFEVR.CATTLES.DOG
         private void Awake()
         {
             ValidateConstraints();
-            dogStateContext = new DogStateContext(dogAnimator);
+            dogStateContext = new DogStateContext(dogAnimator,dogOwnerOverLap);
             InitializeStates();
+        }
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventNames.CallPet, (object[] parameters) => CallPet());
+        }
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventNames.CallPet, (object[] parameters) => CallPet());
         }
 
         #endregion
@@ -55,8 +67,13 @@ namespace FARMLIFEVR.CATTLES.DOG
         private void ValidateConstraints()
         {
             Assert.IsNotNull(dogAnimator, "Dog's Animator is Null");
+            Assert.IsNotNull(dogOwnerOverLap, "Dog Owner OverLap Component is Null");
         }
 
+        private void CallPet()
+        {
+            Debug.Log("<color=red> My Dog is comming towards Me ! </color>");
+        }
         #endregion
 
         #region Public Methods

@@ -33,9 +33,9 @@ MonoBehaviour:
     isPrivate: 1
     createdAt: 2024-08-13T20:59:15-0700
     trainingStatus: 1
-    lastTrainDuration: 66
-    lastTrainedAt: 2024-08-15T11:54:42-0700
-    nextTrainAt: 2024-08-15T11:53:36-0700
+    lastTrainDuration: 47
+    lastTrainedAt: 2024-08-18T22:09:51-0700
+    nextTrainAt: 2024-08-18T22:09:04-0700
     intents:
     - id: 3930206533969818
       name: call_pet

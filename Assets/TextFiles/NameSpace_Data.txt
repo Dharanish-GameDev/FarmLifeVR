@@ -41,7 +41,7 @@ FARMLIFE VR NAMESPACES
 
 7.FARMLIFEVR.VOICEEXPERIENCE
 {
-  .VoiceIntentController
+  .VoiceIntentManager
 }
 
 8.FARMLIFEVR.CATTLES.DOG
@@ -52,5 +52,6 @@ FARMLIFE VR NAMESPACES
   States
   {
     DogIdle
+    DogRunningTowardsOwner
   }
 }

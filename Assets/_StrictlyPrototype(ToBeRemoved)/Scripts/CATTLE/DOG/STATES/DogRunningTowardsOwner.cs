@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace FARMLIFEVR.CATTLES.DOG
 {
-    public class DogIdle : DogBaseState
+    public class DogRunningTowardsOwner : DogBaseState
     {
-        //Constructor
-        public DogIdle(DogStateContext context, DogStateMachine.EDogState state) : base(context, state)
+        public DogRunningTowardsOwner(DogStateContext context, DogStateMachine.EDogState state) : base(context, state)
         {
             DogStateContext dogStateContext = context;
         }
@@ -35,7 +35,7 @@ namespace FARMLIFEVR.CATTLES.DOG
         }
         private void Update()
         {
-            
+
         }
 
         #endregion
@@ -57,10 +57,7 @@ namespace FARMLIFEVR.CATTLES.DOG
         }
         public override void UpdateState()
         {
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                dogStateContext.DogOwnerOverLap.CheckOverlapOnce();
-            }
+
         }
         public override DogStateMachine.EDogState GetNextState()
         {
@@ -82,5 +79,3 @@ namespace FARMLIFEVR.CATTLES.DOG
         #endregion
     }
 }
-
-

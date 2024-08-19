@@ -5451,7 +5451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &619987745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5501,13 +5501,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1a7b995ac5aa043ba267009996425f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overLapCheckingType: 1
+  overLapShape: 0
   interval: 0.2
   boxSize: {x: 0.15, y: 0.15, z: 2.68}
+  sphereRadius: 1
+  capsuleRadius: 1
+  capsuleHeight: 1
   hitLayers:
     serializedVersion: 2
     m_Bits: 64
   offset: {x: 0, y: 0.88, z: 1.39}
-  overLapBoxGizmoColor: {r: 1, g: 0, b: 0.8632798, a: 1}
+  overLapGizmoColor: {r: 0, g: 0, b: 0, a: 1}
   hitColliders:
   - {fileID: 0}
 --- !u!1 &666734668
@@ -10411,7 +10416,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1104272287
 Transform:
   m_ObjectHideFlags: 0
@@ -11514,7 +11519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1227648446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13008,13 +13013,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e7236096346e24599da3545589931f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overLapCheckingType: 1
+  overLapShape: 0
   interval: 0.2
   boxSize: {x: 0.29, y: 0.19, z: 0.65}
+  sphereRadius: 1
+  capsuleRadius: 1
+  capsuleHeight: 2.56
   hitLayers:
     serializedVersion: 2
     m_Bits: 128
   offset: {x: 0, y: 0, z: 0}
-  overLapBoxGizmoColor: {r: 0, g: 0, b: 0, a: 1}
+  overLapGizmoColor: {r: 1, g: 0, b: 0.007795334, a: 1}
   hitColliders:
   - {fileID: 0}
 --- !u!1 &1381712248
@@ -14513,7 +14523,7 @@ PrefabInstance:
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: -0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}

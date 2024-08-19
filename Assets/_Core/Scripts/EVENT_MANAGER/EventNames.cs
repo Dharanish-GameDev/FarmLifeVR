@@ -7,7 +7,7 @@ namespace FARMLIFEVR.EVENTSYSTEM
 {
     public static class EventNames
     {
-        public const string TestEvent = "TestEvent";
+        public const string CallPet = "call_pet";
 
     }
 }
