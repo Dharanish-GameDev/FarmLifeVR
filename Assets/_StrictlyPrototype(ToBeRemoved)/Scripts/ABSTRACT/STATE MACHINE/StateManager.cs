@@ -30,11 +30,14 @@ namespace FARMLIFEVR.STATEMACHINE
             }
             else if (isTransitioningState)
             {
-                TransitionToState(nextStatekey);
+                SwitchState(nextStatekey);
             }
         }
-
-        public void TransitionToState(EState statekey)
+        /// <summary>
+        /// This Method Switch the State to the Given State and End the Current Existing State
+        /// </summary>
+        /// <param name="statekey"></param>
+        public void SwitchState(EState statekey)
         {
             isTransitioningState = true;
             CurrentState.ExitState();

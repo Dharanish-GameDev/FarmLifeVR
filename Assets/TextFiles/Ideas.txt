@@ -2,3 +2,16 @@ Cattle - Base Class
 
 Hen :: Cattle
 Cow :: Cattle 
+
+
+
+
+
+
+// if the CallPet Calls
+
+i should check for the overlap
+
+but the OnHitOverlap callback is in another Script
+
+if the Overlap fails

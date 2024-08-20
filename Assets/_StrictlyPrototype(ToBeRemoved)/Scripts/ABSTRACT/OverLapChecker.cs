@@ -60,7 +60,9 @@ public abstract class OverLapChecker : MonoBehaviour
     [SerializeField]
     protected Collider[] hitColliders = new Collider[10]; // Increased size to capture multiple colliders
     protected HashSet<Collider> previousColliders = new HashSet<Collider>(); // Track previous colliders
-    Vector3 boxCenter;
+    Vector3 center;
+    Vector3 capsulePoint1;
+    Vector3 capsulePoint2;
     int numHits;
 
     #endregion
@@ -89,7 +91,7 @@ public abstract class OverLapChecker : MonoBehaviour
     private void PerformOverlapCheck()
     {
         // Calculate the center position with the offset
-        Vector3 center = transform.position + transform.rotation * offset;
+        center = transform.position + transform.rotation * offset;
         numHits = PerformShapeOverlapCheck(center);
 
         // Detect new hits
@@ -107,9 +109,9 @@ public abstract class OverLapChecker : MonoBehaviour
                 return Physics.OverlapSphereNonAlloc(center, sphereRadius, hitColliders, hitLayers);
 
             case E_OverLapShape.Capsule:
-                Vector3 point1 = center + transform.up * (capsuleHeight / 2 - capsuleRadius);
-                Vector3 point2 = center - transform.up * (capsuleHeight / 2 - capsuleRadius);
-                return Physics.OverlapCapsuleNonAlloc(point1, point2, capsuleRadius, hitColliders, hitLayers);
+                capsulePoint1 = center + transform.up * (capsuleHeight / 2 - capsuleRadius);
+                capsulePoint2 = center - transform.up * (capsuleHeight / 2 - capsuleRadius);
+                return Physics.OverlapCapsuleNonAlloc(capsulePoint1, capsulePoint2, capsuleRadius, hitColliders, hitLayers);
 
             default:
                 Debug.LogWarning("Unsupported overlap shape.");
@@ -117,6 +119,7 @@ public abstract class OverLapChecker : MonoBehaviour
         }
     }
 
+    // It Runs the HitCallback for every collider in hitColliders
     private void ProcessDetectedColliders()
     {
         for (int i = 0; i < numHits; i++)
@@ -142,6 +145,15 @@ public abstract class OverLapChecker : MonoBehaviour
         {
             PerformOverlapCheck();
         }
+    }
+    /// <summary>
+    /// This method check if its overlapping anything and return the bool
+    /// </summary>
+    /// <returns></returns>
+    public bool GetIsOverlapping()
+    {
+        center = transform.position + transform.rotation * offset;
+        return PerformShapeOverlapCheck(center) > 0 ? true : false;
     }
 
     #endregion

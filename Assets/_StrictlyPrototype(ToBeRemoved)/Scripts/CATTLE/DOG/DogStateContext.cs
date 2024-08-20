@@ -7,18 +7,21 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         private Animator dogAnimator;
         private DogOwnerOverLap dogOwnerOverLap;
+        private DogStateMachine dogStateMachine;
 
         //Constructor
-        public DogStateContext(Animator dogAnimator, DogOwnerOverLap dogOwnerOverLap)
+        public DogStateContext(DogStateMachine dogStateMachine,Animator dogAnimator, DogOwnerOverLap dogOwnerOverLap)
         {
             this.dogAnimator = dogAnimator;
             this.dogOwnerOverLap = dogOwnerOverLap;
+            this.dogStateMachine = dogStateMachine;
         }
 
 
         // Properties
         public Animator DogAnimator => dogAnimator;
         public DogOwnerOverLap DogOwnerOverLap => dogOwnerOverLap;
+        public DogStateMachine DogStateMachine => dogStateMachine;
     }
 }
 

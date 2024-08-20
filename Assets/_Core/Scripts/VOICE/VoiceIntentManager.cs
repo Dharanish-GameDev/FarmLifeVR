@@ -55,7 +55,7 @@ namespace FARMLIFEVR.VOICEEXPERIENCE
             }
             else
             {
-                Debug.LogWarning("No intents found in the response.");
+                Debug.Log("<color=yellow> No intents found in the response :( </color>");
             }
         }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-1)] // To Execute this class's OnEnable before Anything else
 public class GameManager : MonoBehaviour
 {
 	public static GameManager Instance { get; private set; }
@@ -25,17 +26,22 @@ public class GameManager : MonoBehaviour
 	public Transform PlayerTransform => playerTransform;
 	public Transform PetDestinationPoint => petDestinationPoint;
 
-	#endregion
+    #endregion
 
-	#region LifeCycle Methods
+    #region LifeCycle Methods
 
-	private void Awake()
+    private void OnEnable()
+    {
+        EventManager.InitializeEventDictionary();
+    }
+    private void Awake()
 	{
 		if(Instance == null)
 		{
 			Instance = this;
 		}
-	}
+        
+    }
 	private void Start()
 	{
 

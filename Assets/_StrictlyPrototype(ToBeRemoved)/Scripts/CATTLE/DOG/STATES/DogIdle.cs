@@ -1,3 +1,4 @@
+using FARMLIFEVR.EVENTSYSTEM;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,28 +18,6 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         #endregion
 
-        #region Properties
-
-
-
-        #endregion
-
-        #region LifeCycle Methods
-
-        private void Awake()
-        {
-
-        }
-        private void Start()
-        {
-
-        }
-        private void Update()
-        {
-            
-        }
-
-        #endregion
 
         #region Private Methods
 
@@ -49,17 +28,17 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         public override void EnterState()
         {
-
+            Debug.Log("<color=cyan> Entered the Dog Idle State ! </color>");
         }
         public override void ExitState()
         {
-
+            
         }
         public override void UpdateState()
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                dogStateContext.DogOwnerOverLap.CheckOverlapOnce();
+                Debug.Log("The Dog Overlap Player : " + dogStateContext.DogOwnerOverLap.GetIsOverlapping());
             }
         }
         public override DogStateMachine.EDogState GetNextState()

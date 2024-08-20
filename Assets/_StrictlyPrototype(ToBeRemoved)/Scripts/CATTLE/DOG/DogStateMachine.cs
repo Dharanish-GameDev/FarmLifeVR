@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using FARMLIFEVR.STATEMACHINE;
 using FARMLIFEVR.EVENTSYSTEM;
+using QFSW.QC;
 
 namespace FARMLIFEVR.CATTLES.DOG
 {
@@ -12,17 +13,24 @@ namespace FARMLIFEVR.CATTLES.DOG
         public enum EDogState
         {
             Idle,
-            Walking,
+            RunningTowardsOwner,
             Petting,
         }
 
         #region Private Variables
 
-        private DogStateContext dogStateContext;
+        // Exposed
+        [Header("References")]
+        [Space(5)]
 
+        [Tooltip("Its the Dog's Animator Component in its Mesh")]
         [SerializeField][Required] private Animator dogAnimator;
 
+        [Tooltip("Its the Overlapping Checking Component with the Player")]
         [SerializeField][Required] private DogOwnerOverLap dogOwnerOverLap;
+
+        // Hidden 
+        private DogStateContext dogStateContext;
 
         #endregion
 
@@ -35,7 +43,7 @@ namespace FARMLIFEVR.CATTLES.DOG
         private void Awake()
         {
             ValidateConstraints();
-            dogStateContext = new DogStateContext(dogAnimator,dogOwnerOverLap);
+            dogStateContext = new DogStateContext(this,dogAnimator,dogOwnerOverLap);
             InitializeStates();
         }
 
@@ -61,6 +69,7 @@ namespace FARMLIFEVR.CATTLES.DOG
         private void InitializeStates()
         {
             States.Add(EDogState.Idle, new DogIdle(dogStateContext,EDogState.Idle));
+            States.Add(EDogState.RunningTowardsOwner, new DogRunningTowardsOwner(dogStateContext, EDogState.RunningTowardsOwner));
             CurrentState = States[EDogState.Idle];
         }
 
@@ -70,9 +79,14 @@ namespace FARMLIFEVR.CATTLES.DOG
             Assert.IsNotNull(dogOwnerOverLap, "Dog Owner OverLap Component is Null");
         }
 
-        private void CallPet()
+
+        [Command]
+        public void CallPet()
         {
-            Debug.Log("<color=red> My Dog is comming towards Me ! </color>");
+            Debug.Log($"<color=#83F458> {EventNames.CallPet} intent found in the response :) </color>");
+            if (dogStateContext.DogOwnerOverLap.GetIsOverlapping()) return;
+            if (CurrentState == States[EDogState.RunningTowardsOwner]) return;
+            SwitchState(EDogState.RunningTowardsOwner);
         }
         #endregion
 

@@ -29,8 +29,7 @@ namespace FARMLIFEVR.INPUT
                 button.inputAction.canceled += ctx => ButtonReleased(button, ctx);
             }
         }
-        private void OnDestroy()
-        {
+        private void OnDestroy()   {
             foreach (ControllerButton button in controllerButtonList)
             {
                 button.inputAction.started -= ctx => ButtonPressed(button, ctx);
