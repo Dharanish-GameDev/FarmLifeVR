@@ -4,24 +4,56 @@ namespace FARMLIFEVR.CATTLES.DOG
 {
     public class DogStateContext
     {
-
+        // Refs
         private Animator dogAnimator;
         private DogOwnerOverLap dogOwnerOverLap;
         private DogStateMachine dogStateMachine;
+        private GameObject dogFoodGameObj;
+
+        // Values
+        private float moveSpeed;
+        private float rotationSpeed;
+
+
+        // Animator Params
+        public readonly int DogAnimInt = Animator.StringToHash("DogAnimInt");
+        public readonly int DogSitEmote = Animator.StringToHash("DogSit");
+        public readonly int DogStandUpEmote = Animator.StringToHash("DogStandUp");
+        public readonly int DogDieEmote = Animator.StringToHash("DogDie");
+        public readonly int DogEatEmote = Animator.StringToHash("DogEat");
 
         //Constructor
-        public DogStateContext(DogStateMachine dogStateMachine,Animator dogAnimator, DogOwnerOverLap dogOwnerOverLap)
+        public DogStateContext
+            (
+            DogStateMachine dogStateMachine,
+            Animator dogAnimator, 
+            DogOwnerOverLap dogOwnerOverLap,
+            float moveSpeed,
+            float rotationSpeed,
+            GameObject dogFoodGameObj
+            )
         {
             this.dogAnimator = dogAnimator;
             this.dogOwnerOverLap = dogOwnerOverLap;
             this.dogStateMachine = dogStateMachine;
+            this.moveSpeed = moveSpeed;
+            this.rotationSpeed = rotationSpeed;
+            this.dogFoodGameObj = dogFoodGameObj;
         }
 
 
         // Properties
+
+        //Refs
         public Animator DogAnimator => dogAnimator;
         public DogOwnerOverLap DogOwnerOverLap => dogOwnerOverLap;
         public DogStateMachine DogStateMachine => dogStateMachine;
+        public GameObject DogFoodGameObj => dogFoodGameObj;
+
+        //Values
+        public float MoveSpeed => moveSpeed;
+        public float RotationSpeed => rotationSpeed;
+      
     }
 }
 

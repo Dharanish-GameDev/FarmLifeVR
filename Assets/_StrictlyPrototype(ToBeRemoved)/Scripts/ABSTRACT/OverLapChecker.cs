@@ -32,6 +32,7 @@ public abstract class OverLapChecker : MonoBehaviour
     [Header("Values")]
     [Space(5)]
     [Tooltip("Time Interval Before another Overlap Check")]
+    [ConditionalField("overLapCheckingType",E_OverLapCheckingType.PerInterval)]
     [SerializeField] private float interval = 0.2f; // Interval in seconds
 
     [ConditionalField("overLapShape", E_OverLapShape.Box)]

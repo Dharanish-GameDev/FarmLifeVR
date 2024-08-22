@@ -14,7 +14,6 @@ namespace FARMLIFEVR.CATTLES.DOG
         {
             Idle,
             RunningTowardsOwner,
-            Petting,
         }
 
         #region Private Variables
@@ -28,6 +27,21 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         [Tooltip("Its the Overlapping Checking Component with the Player")]
         [SerializeField][Required] private DogOwnerOverLap dogOwnerOverLap;
+
+        [Tooltip("Its the GameObject that will appear infront of the Dog while Eating")]
+        [SerializeField][Required] private GameObject dogFoodGameObj;
+
+
+
+        [Space(10)]
+        [Header("Values")]
+        [Space(5)]
+
+        [Tooltip("Its the Value that controls how fast that the dog is going to move")]
+        [Range(0,10)] [SerializeField] private float moveSpeed;
+
+        [Tooltip("Its the Value that controls how fast that the dog is going to rotate towards the target")]
+        [Range(0, 360)] [SerializeField] private float rotationSpeed;
 
         // Hidden 
         private DogStateContext dogStateContext;
@@ -43,17 +57,17 @@ namespace FARMLIFEVR.CATTLES.DOG
         private void Awake()
         {
             ValidateConstraints();
-            dogStateContext = new DogStateContext(this,dogAnimator,dogOwnerOverLap);
+            dogStateContext = new DogStateContext(this,dogAnimator,dogOwnerOverLap,moveSpeed,rotationSpeed,dogFoodGameObj);
             InitializeStates();
         }
 
         private void OnEnable()
         {
-            EventManager.StartListening(EventNames.CallPet, (object[] parameters) => CallPet());
+            EventManager.StartListening(EventNames.CallPet,CallPet);
         }
         private void OnDisable()
         {
-            EventManager.StopListening(EventNames.CallPet, (object[] parameters) => CallPet());
+            EventManager.StopListening(EventNames.CallPet,CallPet);
         }
 
         #endregion
@@ -77,6 +91,7 @@ namespace FARMLIFEVR.CATTLES.DOG
         {
             Assert.IsNotNull(dogAnimator, "Dog's Animator is Null");
             Assert.IsNotNull(dogOwnerOverLap, "Dog Owner OverLap Component is Null");
+            Assert.IsNotNull(dogFoodGameObj, "Dog Owner OverLap Component is Null");
         }
 
 

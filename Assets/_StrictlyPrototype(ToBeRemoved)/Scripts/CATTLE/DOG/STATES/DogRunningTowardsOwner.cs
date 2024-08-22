@@ -1,7 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 
@@ -16,6 +13,11 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         #region Private Variables
 
+        private float distance;
+        private float moveDuration;
+        private Vector3 targetDir;
+        private float angleDiff;
+        private float rotationDuration;
 
         #endregion
 
@@ -31,25 +33,35 @@ namespace FARMLIFEVR.CATTLES.DOG
         {
             Debug.Log("<color=cyan>Entered the Dog Running Towards State ! </color>");
 
-
-            float rotationSpeed = 5f; // Rotation speed in degrees per second
-            float moveSpeed = 2f; // Movement speed in units per second
+            dogStateContext.DogAnimator.SetInteger(dogStateContext.DogAnimInt,1);
 
             // Calculate the distance between the dog and the destination
-            float distance = Vector3.Distance(dogStateContext.DogStateMachine.transform.position, GameManager.Instance.PetDestinationPoint.position);
+             distance = Vector3.Distance(dogStateContext.DogStateMachine.transform.position, GameManager.Instance.PetDestinationPoint.position);
 
             // Calculate the duration for movement based on the desired speed
-            float moveDuration = distance / moveSpeed;
+             moveDuration = distance / dogStateContext.MoveSpeed;
+
+            targetDir = GameManager.Instance.PetDestinationPoint.position - dogStateContext.DogStateMachine.transform.position;
+            angleDiff = Vector3.Angle(dogStateContext.DogStateMachine.transform.forward, targetDir);
+
+            rotationDuration = angleDiff / dogStateContext.RotationSpeed;
 
             // Rotate the dog to face the destination
-            dogStateContext.DogStateMachine.transform.DOLookAt(GameManager.Instance.PetDestinationPoint.position, rotationSpeed * Time.deltaTime)
+            dogStateContext.DogStateMachine.transform.DOLookAt(GameManager.Instance.PetDestinationPoint.position,rotationDuration)
                 .SetEase(Ease.Linear) // Smooth rotation
                 .OnComplete(() =>
                 {
+                    dogStateContext.DogAnimator.SetInteger(dogStateContext.DogAnimInt, 2);
                     // Move the dog towards the target position at the calculated speed
-                    dogStateContext.DogStateMachine.transform.DOMove(GameManager.Instance.PetDestinationPoint.position, moveDuration)
+                    dogStateContext.DogStateMachine.transform.DOMove(GameManager.Instance.PetDestinationPoint.position - new Vector3(0,0,1), moveDuration)
                         .SetEase(Ease.Linear) // Smooth movement
-                        .OnComplete(() => dogStateContext.DogStateMachine.SwitchState(DogStateMachine.EDogState.Idle)); // Trigger OnMoveComplete when movement is done
+                        .OnComplete(() => 
+                        {
+                            dogStateContext.DogAnimator.SetInteger(dogStateContext.DogAnimInt, 1);
+                            dogStateContext.DogStateMachine.transform.DOMove(GameManager.Instance.PetDestinationPoint.position, moveDuration)
+                       .SetEase(Ease.Linear).OnComplete(() => dogStateContext.DogStateMachine.SwitchState(DogStateMachine.EDogState.Idle));// Smooth movement
+                            
+                        }); // Trigger OnMoveComplete when movement is done
                 });
 
         }

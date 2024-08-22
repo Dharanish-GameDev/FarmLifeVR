@@ -1,9 +1,13 @@
 using UnityEngine;
 
-public class DogOwnerOverLap : OverLapChecker
+
+namespace FARMLIFEVR.CATTLES.DOG
 {
-    protected override void HitCallBack(Collider collider)
+    public class DogOwnerOverLap : OverLapChecker
     {
-        
+        protected override void HitCallBack(Collider collider)
+        {
+
+        }
     }
 }
