@@ -1,5 +1,4 @@
 using DG.Tweening;
-using FARMLIFEVR.EVENTSYSTEM;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,18 +15,14 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         #region Private Variables
 
+        private bool canPerformEmote;
         private bool canStandUp;
+        private bool isInGround;
 
         #endregion
 
 
         #region Private Methods
-
-        // Sets CanStandUp to true which allows standing up after sitting down or died
-        private void AllowStandUpEmote()
-        {
-            SetCanStandUpBool(true);
-        }
 
         // Disables the Food Mesh that appears infront of the dog while eating 
         private void DisableDogFoodGameObject()
@@ -36,18 +31,74 @@ namespace FARMLIFEVR.CATTLES.DOG
         }
 
         // It Returns is the Player is Near the Dog to do emotes
-        private bool IsPlayerWithinRange()
+        private bool CanPlayEmote()
         {
-            return dogStateContext.DogOwnerOverLap.GetIsOverlapping();
+            return dogStateContext.DogStateMachine.isPlayerWithinRange && canPerformEmote;
         }
 
-        // Sets the CanStandUpBool that control emote states
-        private void SetCanStandUpBool(bool value)
+        // Sets CanPerform Emote Boolean which prohibits switching Between Emotes while playing
+        private void SetCanPerformEmoteBool(bool value)
         {
-            canStandUp = value;
+            canPerformEmote = value;
+        }
+
+        //Its Allows to perform the Emote by a DoVirtual
+        private void AllowToPerformEmote()
+        {
+            SetCanPerformEmoteBool(true);
+            //SetIsStandingBoolean(!isStanding);
         }
 
         #endregion
+
+        public void PlayDogSitDownEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogSitEmote);
+            canStandUp = true;
+            isInGround = true;
+            SetCanPerformEmoteBool(false);
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
+
+        public void PlayDogStandUpEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (!canStandUp) return;
+            if (!isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogStandUpEmote);
+            SetCanPerformEmoteBool(false);
+            canStandUp = false;
+            isInGround = false;
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
+
+        public void PlayDogDieEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogDieEmote);
+            SetCanPerformEmoteBool(false);
+            canStandUp = true;
+            isInGround = true;
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
+
+        public void PlayDogFeedingEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogEatEmote);
+            dogStateContext.DogFoodGameObj.SetActive(true);
+            SetCanPerformEmoteBool(false);
+            DOVirtual.DelayedCall(2.5f, DisableDogFoodGameObject);
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
 
         #region Overriden Methods
 
@@ -55,7 +106,8 @@ namespace FARMLIFEVR.CATTLES.DOG
         {
             Debug.Log("<color=cyan> Entered the Dog Idle State ! </color>");
             dogStateContext.DogAnimator.SetInteger(dogStateContext.DogAnimInt, 0);
-            canStandUp = false;
+            SetCanPerformEmoteBool(true);
+            isInGround = false;
             DisableDogFoodGameObject();
         }
         public override void ExitState()
@@ -66,30 +118,49 @@ namespace FARMLIFEVR.CATTLES.DOG
         {
             if (Input.GetKeyDown(KeyCode.Alpha2)) // SitEmote
             {
-                if (!IsPlayerWithinRange()) return;
-                SetCanStandUpBool(false);
+                if (dogStateContext.DogStateMachine.CurrentState != this) return;
+                if (!CanPlayEmote()) return;
+                if (isInGround) return;
                 dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogSitEmote);
-                DOVirtual.DelayedCall(2.0f, AllowStandUpEmote);
+                canStandUp = true;
+                isInGround = true;
+                SetCanPerformEmoteBool(false);
+                DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+
             }
             if (Input.GetKeyDown(KeyCode.Alpha3)) // DogStandUp
             {
-                if (!IsPlayerWithinRange()) return;
+                if (dogStateContext.DogStateMachine.CurrentState != this) return;
+                if (!CanPlayEmote()) return;
                 if (!canStandUp) return;
+                if (!isInGround) return;
                 dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogStandUpEmote);
-                SetCanStandUpBool(false);
+                SetCanPerformEmoteBool(false);
+                canStandUp = false;
+                isInGround = false;
+                DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4)) // DogDie
             {
-                if (!IsPlayerWithinRange()) return;
+                if (dogStateContext.DogStateMachine.CurrentState != this) return;
+                if (!CanPlayEmote()) return;
+                if (isInGround) return;
                 dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogDieEmote);
-                DOVirtual.DelayedCall(2.0f, AllowStandUpEmote);
+                SetCanPerformEmoteBool(false);
+                canStandUp = true;
+                isInGround = true;
+                DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
             }
             if(Input.GetKeyDown(KeyCode.Alpha5)) // Feeding Dog
             {
-                if (!IsPlayerWithinRange()) return;
+                if (dogStateContext.DogStateMachine.CurrentState != this) return;
+                if (!CanPlayEmote()) return;
+                if (isInGround) return;
                 dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogEatEmote);
                 dogStateContext.DogFoodGameObj.SetActive(true);
+                SetCanPerformEmoteBool(false);
                 DOVirtual.DelayedCall(2.5f,DisableDogFoodGameObject);
+                DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
             }
         }
         public override DogStateMachine.EDogState GetNextState()

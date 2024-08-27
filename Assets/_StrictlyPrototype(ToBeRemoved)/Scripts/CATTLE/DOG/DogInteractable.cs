@@ -6,15 +6,16 @@ using UnityEngine.XR.Interaction.Toolkit;
 [RequireComponent(typeof(Collider))]
 public class DogInteractable : XRSimpleInteractable
 {
+    [Space(10)]
+    [Header("References")]
+    [Space(5)]
+    [SerializeField][Required] private DogEmoteManager dogEmoteManager;
+
+
+
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         base.OnSelectEntered(args);
-        print("Select Entered ");
-    }
-
-    protected override void OnSelectExited(SelectExitEventArgs args)
-    {
-        base.OnSelectExited(args);
-        print("Select Exited ");
+        dogEmoteManager.ToggleEmoteWheelUI(); // Toggle Activity of Emote Wheel
     }
 }

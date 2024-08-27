@@ -14,6 +14,7 @@ namespace FARMLIFEVR.CATTLES.DOG
         {
             Idle,
             RunningTowardsOwner,
+            EmoteState
         }
 
         #region Private Variables
@@ -52,6 +53,13 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         #endregion
 
+        #region Properties
+
+        public DogIdle DogIdle => (DogIdle)States[EDogState.Idle];
+        public bool isPlayerWithinRange => dogOwnerOverLap.GetIsOverlapping();
+
+        #endregion
+
         #region LifeCycle Methods
 
         private void Awake()
@@ -72,11 +80,7 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         #endregion
 
-        #region Properties
-
-
-
-        #endregion
+        
 
         #region Private Methods
 
@@ -84,6 +88,7 @@ namespace FARMLIFEVR.CATTLES.DOG
         {
             States.Add(EDogState.Idle, new DogIdle(dogStateContext,EDogState.Idle));
             States.Add(EDogState.RunningTowardsOwner, new DogRunningTowardsOwner(dogStateContext, EDogState.RunningTowardsOwner));
+            States.Add(EDogState.EmoteState, new DogEmoteState(dogStateContext,EDogState.EmoteState));
             CurrentState = States[EDogState.Idle];
         }
 
