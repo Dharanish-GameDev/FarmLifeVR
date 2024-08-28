@@ -6,7 +6,6 @@ namespace FARMLIFEVR.CATTLES.DOG
     {
         // Refs
         private Animator dogAnimator;
-        private DogOwnerOverLap dogOwnerOverLap;
         private DogStateMachine dogStateMachine;
         private GameObject dogFoodGameObj;
 
@@ -27,14 +26,12 @@ namespace FARMLIFEVR.CATTLES.DOG
             (
             DogStateMachine dogStateMachine,
             Animator dogAnimator, 
-            DogOwnerOverLap dogOwnerOverLap,
             float moveSpeed,
             float rotationSpeed,
             GameObject dogFoodGameObj
             )
         {
             this.dogAnimator = dogAnimator;
-            this.dogOwnerOverLap = dogOwnerOverLap;
             this.dogStateMachine = dogStateMachine;
             this.moveSpeed = moveSpeed;
             this.rotationSpeed = rotationSpeed;
@@ -46,7 +43,6 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         //Refs
         public Animator DogAnimator => dogAnimator;
-        public DogOwnerOverLap DogOwnerOverLap => dogOwnerOverLap;
         public DogStateMachine DogStateMachine => dogStateMachine;
         public GameObject DogFoodGameObj => dogFoodGameObj;
 

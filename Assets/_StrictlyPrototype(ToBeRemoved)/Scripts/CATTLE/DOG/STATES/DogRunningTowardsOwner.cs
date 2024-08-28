@@ -31,7 +31,7 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         public override void EnterState()
         {
-            Debug.Log("<color=cyan>Entered the Dog Running Towards State ! </color>");
+            Debug.Log("<color=#f4bbff> Dog Entered Running Towards Owner State </color>");
 
             dogStateContext.DogAnimator.SetInteger(dogStateContext.DogAnimInt,1);
 

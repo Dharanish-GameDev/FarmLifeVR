@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,38 +12,144 @@ namespace FARMLIFEVR.CATTLES.DOG
             DogStateContext dogStateContext = context;
         }
 
+        #region Private Variables
+
+        private bool canPerformEmote;
+        private bool canStandUp;
+        private bool isInGround;
+
+        #endregion
+
+        #region Properties
+
+        
+
+        #endregion
+
+
+        #region Private Methods
+
+        // Disables the Food Mesh that appears infront of the dog while eating 
+        private void DisableDogFoodGameObject()
+        {
+            dogStateContext.DogFoodGameObj.SetActive(false);
+        }
+
+        // It Returns is the Player is Near the Dog to do emotes
+        private bool CanPlayEmote()
+        {
+            return dogStateContext.DogStateMachine.isPlayerWithinRange && canPerformEmote;
+        }
+
+        // Sets CanPerform Emote Boolean which prohibits switching Between Emotes while playing
+        private void SetCanPerformEmoteBool(bool value)
+        {
+            canPerformEmote = value;
+        }
+
+        //Its Allows to perform the Emote by a DoVirtual
+        private void AllowToPerformEmote()
+        {
+            SetCanPerformEmoteBool(true);
+        }
+
+        private void SetIsInGroundBoolean(bool value)
+        {
+            isInGround = value;
+            dogStateContext.DogStateMachine.CanSwitchFromEmoteStateToOther = !value;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public void PlayDogSitDownEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogSitEmote);
+            canStandUp = true;
+            SetIsInGroundBoolean(true);
+            SetCanPerformEmoteBool(false);
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
+
+        public void PlayDogStandUpEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (!canStandUp) return;
+            if (!isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogStandUpEmote);
+            SetCanPerformEmoteBool(false);
+            canStandUp = false;
+            SetIsInGroundBoolean(false);
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
+
+        public void PlayDogDieEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogDieEmote);
+            SetCanPerformEmoteBool(false);
+            canStandUp = true;
+            SetIsInGroundBoolean(true);
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
+
+        public void PlayDogFeedingEmote()
+        {
+            if (dogStateContext.DogStateMachine.CurrentState != this) return;
+            if (!CanPlayEmote()) return;
+            if (isInGround) return;
+            dogStateContext.DogAnimator.SetTrigger(dogStateContext.DogEatEmote);
+            dogStateContext.DogFoodGameObj.SetActive(true);
+            SetCanPerformEmoteBool(false);
+            DOVirtual.DelayedCall(2.5f, DisableDogFoodGameObject);
+            DOVirtual.DelayedCall(2.0f, AllowToPerformEmote);
+        }
+
+        #endregion
+
         #region Overriden Methods
 
         public override void EnterState()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("<color=#f4bbff> Dog Entered Emote State </color>");
+
+            SetCanPerformEmoteBool(true);
+            isInGround = false;
+            DisableDogFoodGameObject();
         }
         public override void ExitState() 
         { 
-            throw new System.NotImplementedException(); 
+            
         }
         public override void UpdateState()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public override DogStateMachine.EDogState GetNextState()
         {
-            throw new System.NotImplementedException();
+            return Statekey;
         }
         public override void OnTriggerEnterState(Collider other)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public override void OnTriggerExitState(Collider other)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public override void OnTriggerStayState(Collider other)
         {
-            throw new System.NotImplementedException();
+           
         }
         #endregion
     }

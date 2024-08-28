@@ -46,6 +46,7 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         // Hidden 
         private DogStateContext dogStateContext;
+        private bool canSwitchFromEmoteStateToOther = true;
 
         #endregion
 
@@ -55,8 +56,20 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         #region Properties
 
-        public DogIdle DogIdle => (DogIdle)States[EDogState.Idle];
+        public DogEmoteState DogEmoteState => States[EDogState.EmoteState] as DogEmoteState;
         public bool isPlayerWithinRange => dogOwnerOverLap.GetIsOverlapping();
+        public bool isInIdleState => CurrentState == States[EDogState.Idle];
+        public bool CanSwitchFromEmoteStateToOther
+        {
+            get
+            {
+                return canSwitchFromEmoteStateToOther;
+            }
+            set
+            {
+                canSwitchFromEmoteStateToOther = value;
+            }
+        }
 
         #endregion
 
@@ -65,17 +78,23 @@ namespace FARMLIFEVR.CATTLES.DOG
         private void Awake()
         {
             ValidateConstraints();
-            dogStateContext = new DogStateContext(this,dogAnimator,dogOwnerOverLap,moveSpeed,rotationSpeed,dogFoodGameObj);
+            dogStateContext = new DogStateContext(this,dogAnimator,moveSpeed,rotationSpeed,dogFoodGameObj);
             InitializeStates();
         }
 
         private void OnEnable()
         {
+            // Events Subscription
             EventManager.StartListening(EventNames.CallPet,CallPet);
+            EventManager.StartListening(EventNames.SwitchDogStateToIdle, SwitchDogStateToIdle);
+            EventManager.StartListening(EventNames.SwitchDogStateToEmote, SwitchDogStateToEmoteState);
         }
         private void OnDisable()
         {
+            // Events UnSubscription
             EventManager.StopListening(EventNames.CallPet,CallPet);
+            EventManager.StopListening(EventNames.SwitchDogStateToIdle, SwitchDogStateToIdle);
+            EventManager.StopListening(EventNames.SwitchDogStateToEmote, SwitchDogStateToEmoteState);
         }
 
         #endregion
@@ -99,19 +118,42 @@ namespace FARMLIFEVR.CATTLES.DOG
             Assert.IsNotNull(dogFoodGameObj, "Dog Owner OverLap Component is Null");
         }
 
+        private void SwitchDogStateToIdle()
+        {
+            if(isPlayerWithinRange)
+            {
+                if(CurrentState == States[EDogState.EmoteState])
+                {
+                    SwitchState(EDogState.Idle);
+                }
+            }
+        }
+
+        private void SwitchDogStateToEmoteState()
+        {
+            if (isPlayerWithinRange)
+            {
+                if (CurrentState == States[EDogState.Idle])
+                {
+                    SwitchState(EDogState.EmoteState);
+                }
+            }
+        }
+
+
+
+        #endregion
+
+        #region Public Methods
 
         [Command]
         public void CallPet()
         {
             Debug.Log($"<color=#83F458> {EventNames.CallPet} intent found in the response :) </color>");
-            if (dogStateContext.DogOwnerOverLap.GetIsOverlapping()) return;
+            if (isPlayerWithinRange) return;
             if (CurrentState == States[EDogState.RunningTowardsOwner]) return;
             SwitchState(EDogState.RunningTowardsOwner);
         }
-        #endregion
-
-        #region Public Methods
-
 
         #endregion
     }
