@@ -49,9 +49,26 @@ FARMLIFE VR NAMESPACES
  .DogBaseState
  .DogStateMachine
  .DogStateContext
+ .DogOwnerOverLap
+ .DogInteractable
+ .DogEmoteManager
   States
   {
     DogIdle
     DogRunningTowardsOwner
+    DogEmoteState
   }
+}
+
+9.FARMLIFEVR.CROPS.MAIZE
+{
+.MaizeFieldBaseState
+.MaizeFieldStateMachine
+.MaizeFieldStateContext
+
+ States
+ {
+
+ }
+
 }

@@ -5581,7 +5581,7 @@ Transform:
   m_GameObject: {fileID: 619987744}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.518, z: 7.6}
+  m_LocalPosition: {x: 0, y: 0.518, z: 9.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11635,6 +11635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f693a4a5d3fa4439c6e814b53818a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTransitioningState: 0
   rigidBody: {fileID: 1227648448}
 --- !u!4 &1227648447
 Transform:
@@ -14626,7 +14627,7 @@ PrefabInstance:
     - target: {fileID: 4845276930943762971, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: -0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 4845637959249703711, guid: 2da3dcc22749e7f4280737786d898334,
         type: 3}
