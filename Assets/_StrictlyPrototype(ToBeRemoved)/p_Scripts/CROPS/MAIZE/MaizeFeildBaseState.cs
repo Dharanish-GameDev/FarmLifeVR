@@ -11,5 +11,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             this.maizeFieldContext = maizeFieldContext;
         }
+
+        public abstract MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState();
     }
 }

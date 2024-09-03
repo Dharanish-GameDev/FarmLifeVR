@@ -20,12 +20,11 @@ namespace FARMLIFEVR.STATEMACHINE
         {
             ValidateConstraints();
         }
-
-        private void Start()
+        public virtual void Start()
         {
             CurrentState.EnterState();
         }
-        private void Update()
+        public virtual void Update()
         {
             EState nextStatekey = CurrentState.GetStateKey();
             if (nextStatekey.Equals(CurrentState.Statekey) && !isTransitioningState)

@@ -1,18 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {
-	public class MaizeFieldSeedState : MaizeFeildBaseState
+
+	public class MF_SproutingState : MaizeFeildBaseState
 	{
         //Constructor
-        public MaizeFieldSeedState(MaizeFieldContext context,MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state) 
+        public MF_SproutingState(MaizeFieldContext context, MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state)
         {
             MaizeFieldContext maizeFieldContext = context;
-            //Statekey = state;
         }
 
         #region Private Variables
 
+        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.WaterNeeded;
 
         #endregion
 
@@ -25,7 +28,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         public override void EnterState()
         {
-            Debug.Log("<color=#f4bbff> Maize Field Entered Seed State </color>");
+            Debug.Log("<color=#f4bbff> Maize Field Entered Sprouting State </color>");
         }
         public override void ExitState()
         {
@@ -35,7 +38,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
 
         }
-        
+
         public override MaizeFeildStateMachine.EMaizeFieldState GetStateKey()
         {
             return Statekey;
@@ -52,6 +55,10 @@ namespace FARMLIFEVR.CROPS.MAIZE
         public override void OnTriggerExitState(Collider other)
         {
 
+        }
+        public override MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState()
+        {
+            return nextState;
         }
 
         #endregion

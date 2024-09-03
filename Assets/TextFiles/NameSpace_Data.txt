@@ -68,6 +68,16 @@ FARMLIFE VR NAMESPACES
 
  States
  {
+  // MF - Maize Field
+
+  1.MF_SeedState,
+  2.MF_SproutingState,
+  3.MF_WaterNeededState,
+  4.MF_SmallPlantState,
+  5.MF_MediumPlantState,
+  6.MF_PestControlState,
+  7.MF_MaturePlantState,
+  8.MF_HarvestState
 
  }
 
