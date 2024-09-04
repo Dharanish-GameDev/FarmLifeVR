@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FARMLIFEVR.STATEMACHINE;
+using UnityEngine.Assertions;
+using FARMLIFEVR.EVENTSYSTEM;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {
@@ -23,34 +25,49 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
 		//Exposed in Editor
 
+		[SerializeField]
+		private List<Maize> maizesList = new List<Maize>();
 
-		//Hidden
-		private MaizeFieldContext maizeFieldStateContext;
+        
+
+        //Hidden
+        private MaizeFieldContext maizeFieldStateContext;
 		private MaizeFeildBaseState currentMaizeFieldState;
+        private readonly HashSet<Maize> maizesHashSet = new HashSet<Maize>(); // Using HashSet to avoid Duplicity
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
+        #endregion
 
+        #region LifeCycle Methods
 
-		#endregion
-
-		#region LifeCycle Methods
-
-		public override void Awake()
+        private void OnEnable()
+        {
+			EventManager.StartListening(EventNames.MF_AdvanceToNextState, TransitionToNextState);
+        }
+        public override void Awake()
 		{
 			base.Awake();
-			maizeFieldStateContext = new MaizeFieldContext(this);
+			maizeFieldStateContext = new MaizeFieldContext(this,maizesHashSet);
 			InitializeStates();
+			foreach (Maize maize in maizesList)  // Adding All the Elements in the List to The HashSet for Usage
+			{
+				maizesHashSet.Add(maize);
+			}
 		}
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventNames.MF_AdvanceToNextState, TransitionToNextState);
+        }
 
-		public override void Update()
+        public override void Update()
 		{
 			base.Update();
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                TransitionToNextState();
+				EventManager.TriggerEvent(EventNames.MF_AdvanceToNextState);
             }
         }
         #endregion
@@ -80,7 +97,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         //Overriden Method
         public override void ValidateConstraints() // Validating Refs
         {
-			
+			if (maizesList.Count == 0) Debug.LogError("Maizes List is Empty !");
         }
 
 		/// <summary>
@@ -91,6 +108,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
             currentMaizeFieldState = CurrentState as MaizeFeildBaseState;
             if (currentMaizeFieldState != null)
             {
+				if (!currentMaizeFieldState.GetHasApprovalToSwitchNextState()) return;
                 SwitchState(currentMaizeFieldState.GetCorrespondingNextState());
             }
         }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace FARMLIFEVR.EVENTSYSTEM
 {
-
     public static class EventManager
     {
         private static Dictionary<string, List<Delegate>> eventDictionary = new Dictionary<string, List<Delegate>>();
@@ -85,7 +84,7 @@ namespace FARMLIFEVR.EVENTSYSTEM
             {
                 Debug.Log(eventName);
             }
-            Debug.Log("Event Dictionary Cleared !");
+            Debug.Log("<color=green> Event Dictionary Cleared! </color>");
             eventDictionary.Clear();
         }
     }

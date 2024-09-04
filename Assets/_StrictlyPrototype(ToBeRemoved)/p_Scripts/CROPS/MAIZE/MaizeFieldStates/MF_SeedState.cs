@@ -1,3 +1,4 @@
+using FARMLIFEVR.EVENTSYSTEM;
 using UnityEngine;
 
 namespace FARMLIFEVR.CROPS.MAIZE
@@ -18,7 +19,6 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         #region Private Methods
 
-
         #endregion
 
         #region Overriden Methods
@@ -26,10 +26,11 @@ namespace FARMLIFEVR.CROPS.MAIZE
         public override void EnterState()
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered Seed State </color>");
+            EventManager.TriggerEvent(EventNames.MF_OnStateChanged,GetStateKey());
         }
         public override void ExitState()
         {
-
+            
         }
         public override void UpdateState()
         {
@@ -56,6 +57,10 @@ namespace FARMLIFEVR.CROPS.MAIZE
         public override MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState()
         {
             return nextState;
+        }
+        public override bool GetHasApprovalToSwitchNextState()
+        {
+            return true;
         }
 
         #endregion

@@ -1,3 +1,4 @@
+using FARMLIFEVR.EVENTSYSTEM;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         public override void EnterState()
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered MediumPlant State </color>");
+            EventManager.TriggerEvent(EventNames.MF_OnStateChanged, GetStateKey());
         }
         public override void ExitState()
         {
@@ -59,7 +61,10 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             return nextState;
         }
-
+        public override bool GetHasApprovalToSwitchNextState()
+        {
+            return true;
+        }
         #endregion
     }
 }

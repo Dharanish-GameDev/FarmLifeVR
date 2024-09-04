@@ -13,5 +13,6 @@ namespace FARMLIFEVR.CROPS.MAIZE
         }
 
         public abstract MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState();
+        public abstract bool GetHasApprovalToSwitchNextState();
     }
 }

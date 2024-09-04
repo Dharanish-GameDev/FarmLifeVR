@@ -66,6 +66,9 @@ FARMLIFE VR NAMESPACES
 .MaizeFieldStateMachine
 .MaizeFieldStateContext
 
+//Maize Crop (Note : Its not related to MaizeField Systems)
+.Maize
+
  States
  {
   // MF - Maize Field

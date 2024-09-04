@@ -10,6 +10,8 @@ namespace FARMLIFEVR.EVENTSYSTEM
         public const string CallPet = "call_pet";
         public const string SwitchDogStateToIdle = "SwitchDogStateToIdle";
         public const string SwitchDogStateToEmote = "SwitchDogStateToEmote";
+        public const string MF_AdvanceToNextState = "MF_AdvanceToNextState";
+        public const string MF_OnStateChanged = "MF_OnStageChanged";
     }
 }
 
