@@ -58,7 +58,7 @@ public abstract class OverLapChecker : MonoBehaviour
 #endif
 
     protected bool onHitCalled = false; // To track if the onHit callback has been called
-    [SerializeField]
+    [SerializeField] // For Viewing Purpose only
     protected Collider[] hitColliders = new Collider[10]; // Increased size to capture multiple colliders
     protected HashSet<Collider> previousColliders = new HashSet<Collider>(); // Track previous colliders
     Vector3 center;

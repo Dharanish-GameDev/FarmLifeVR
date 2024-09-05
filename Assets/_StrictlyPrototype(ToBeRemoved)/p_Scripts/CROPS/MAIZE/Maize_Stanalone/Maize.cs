@@ -30,6 +30,9 @@ namespace FARMLIFEVR.CROPS.MAIZE
         private void OnEnable()
         {
             EventManager.StartListening(EventNames.MF_OnStateChanged, OnMaizeFieldStateChanged);
+        }
+        private void Awake()
+        {
             AddVisualsToHashset();
         }
         private void OnDisable()
@@ -44,45 +47,67 @@ namespace FARMLIFEVR.CROPS.MAIZE
         private void OnMaizeFieldStateChanged(params object[] parameters)
         {
             if (parameters.Length == 0) return;
-            currentMaizeFieldState = (MaizeFeildStateMachine.EMaizeFieldState)parameters[0];
+            currentMaizeFieldState = (MaizeFeildStateMachine.EMaizeFieldState)parameters[0]; // Getting Current State from the Params
             switch (currentMaizeFieldState)
             {
+                // Handles Seed State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.Seed:
                     SeedState();
                     break;
 
+
+                // Handles Sprouting State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.Sprouting:
                     SproutingState();
                     break;
 
+                    
+                // Handles WaterNeeded State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.WaterNeeded:
                     WaterNeedState();
                     break;
 
+
+                // Handles SmallPlant State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.SmallPlant:
                     SmallPlantState();
                     break;
 
+
+                // Handles MediumPlant State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.MediumPlant:
                     MediumPlantState();
                     break;
 
+
+                // Handles PestControl State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.PestControl:
                     PestControlState();
                     break;
 
+
+                // Handles MaturePlant State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.MaturePlant:
                     MaturePlantState();
                     break;
 
+
+                // Handles Harvesting State Logic
                 case MaizeFeildStateMachine.EMaizeFieldState.Harvesting:
                     HarvestingState();
+                    break;
+
+
+                // Handles After Harvesting State Logic
+                case MaizeFeildStateMachine.EMaizeFieldState.AfterHarvesting:
+                    AfterHarvestingState();
                     break;
 
             }
         }
 
         #region States Entered Callback Methods
+
         private void SeedState()
         {
             Debug.Log("Seed State");
@@ -123,6 +148,11 @@ namespace FARMLIFEVR.CROPS.MAIZE
             Debug.Log("Harvestting State");
             EnableVisualFromHashSet(maizeVisuals.HarvestReady);
             maizeVisuals.HarvestReadyMaizeModel.SetActive(true);
+        }
+        private void AfterHarvestingState()
+        {
+            Debug.Log("After Harvesting State");
+            EnableVisualFromHashSet(maizeVisuals.AfterHarvest);
         }
 
         #endregion
@@ -169,28 +199,28 @@ namespace FARMLIFEVR.CROPS.MAIZE
     [System.Serializable]
     public struct MaizeVisuals
     {
-        [SerializeField] [Required] private GameObject seed;
-        [SerializeField] [Required] private GameObject sprouting;
-        [SerializeField] [Required] private GameObject waterNeeded;
-        [SerializeField] [Required] private GameObject smallPlant;
-        [SerializeField] [Required] private GameObject mediumPlant;
-        [SerializeField] [Required] private GameObject pestControl;
-        [SerializeField] [Required] private GameObject maturePlant;
-        [SerializeField] [Required] private GameObject harvestReady;
-        [SerializeField] [Required] private GameObject harvestReadyMaizeModel;
+        [SerializeField] [Required] private GameObject seedVisual;
+        [SerializeField] [Required] private GameObject sproutingVisual;
+        [SerializeField] [Required] private GameObject waterNeededVisual;
+        [SerializeField] [Required] private GameObject smallPlantVisual;
+        [SerializeField] [Required] private GameObject mediumPlantVisual;
+        [SerializeField] [Required] private GameObject pestControlVisual;
+        [SerializeField] [Required] private GameObject maturePlantVisual;
+        [SerializeField] [Required] private GameObject harvestReadyVisual;
+        [SerializeField] [Required] private GameObject harvestReadyMaizeModelVisual;
         [SerializeField] [Required] private GameObject afterHarvest;
 
         // Properties
 
-        public GameObject SeedVisual => seed;
-        public GameObject SproutingVisual => sprouting;
-        public GameObject WaterNeededVisual => waterNeeded;
-        public GameObject SmallPlantVisual => smallPlant;
-        public GameObject MediumPlantVisual => mediumPlant;
-        public GameObject PestControlVisual => pestControl;
-        public GameObject MaturePlant => maturePlant;
-        public GameObject HarvestReady => harvestReady;
-        public GameObject HarvestReadyMaizeModel => harvestReadyMaizeModel;
+        public GameObject SeedVisual => seedVisual;
+        public GameObject SproutingVisual => sproutingVisual;
+        public GameObject WaterNeededVisual => waterNeededVisual;
+        public GameObject SmallPlantVisual => smallPlantVisual;
+        public GameObject MediumPlantVisual => mediumPlantVisual;
+        public GameObject PestControlVisual => pestControlVisual;
+        public GameObject MaturePlant => maturePlantVisual;
+        public GameObject HarvestReady => harvestReadyVisual;
+        public GameObject HarvestReadyMaizeModel => harvestReadyMaizeModelVisual;
         public GameObject AfterHarvest => afterHarvest;
     }
 }

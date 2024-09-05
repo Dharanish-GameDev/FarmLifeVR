@@ -4,6 +4,7 @@ using UnityEngine;
 using FARMLIFEVR.STATEMACHINE;
 using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
+using FARMLIFEVR.LAND;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {
@@ -18,19 +19,17 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			MediumPlant,
 			PestControl,
 			MaturePlant,
-			Harvesting
+			Harvesting,
+			AfterHarvesting
 		}
 
 		#region Private Variables
 
 		//Exposed in Editor
+		[SerializeField] private List<Land> landsList = new List<Land>();
 
-		[SerializeField]
-		private List<Maize> maizesList = new List<Maize>();
-
-        
-
-        //Hidden
+    
+        //Hidden from Editor
         private MaizeFieldContext maizeFieldStateContext;
 		private MaizeFeildBaseState currentMaizeFieldState;
         private readonly HashSet<Maize> maizesHashSet = new HashSet<Maize>(); // Using HashSet to avoid Duplicity
@@ -52,9 +51,9 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			base.Awake();
 			maizeFieldStateContext = new MaizeFieldContext(this,maizesHashSet);
 			InitializeStates();
-			foreach (Maize maize in maizesList)  // Adding All the Elements in the List to The HashSet for Usage
+			foreach (Land land in landsList)  // Adding All the Elements in the List to The HashSet for Usage
 			{
-				maizesHashSet.Add(maize);
+				maizesHashSet.Add(land.Maize);
 			}
 		}
         private void OnDisable()
@@ -85,6 +84,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			States.Add(EMaizeFieldState.PestControl, new MF_PestControlState(maizeFieldStateContext, EMaizeFieldState.PestControl));
 			States.Add(EMaizeFieldState.MaturePlant, new MF_MaturePlantState(maizeFieldStateContext, EMaizeFieldState.MaturePlant));
 			States.Add(EMaizeFieldState.Harvesting, new MF_HarvestingState(maizeFieldStateContext, EMaizeFieldState.Harvesting));
+			States.Add(EMaizeFieldState.AfterHarvesting, new MF_AfterHarvestingState(maizeFieldStateContext, EMaizeFieldState.AfterHarvesting));
 
 			// Setting Current State or FirstState
 			CurrentState = States[EMaizeFieldState.Seed];
@@ -97,7 +97,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         //Overriden Method
         public override void ValidateConstraints() // Validating Refs
         {
-			if (maizesList.Count == 0) Debug.LogError("Maizes List is Empty !");
+			if (landsList.Count == 0) Debug.LogError("Maizes List is Empty !");
         }
 
 		/// <summary>

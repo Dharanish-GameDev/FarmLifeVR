@@ -1,6 +1,8 @@
+using FARMLIFEVR.CROPS.MAIZE;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace FARMLIFEVR.LAND
 {
@@ -9,11 +11,14 @@ namespace FARMLIFEVR.LAND
         #region Private Variables
 
         // Editor Exposed
-        [SerializeField] private Material soilMat;
-        [SerializeField] private Material tilledMat;
-        [SerializeField] private Material wateredMat;
-        [SerializeField] private LandState LandState = LandState.BeforePloughing;
-        [SerializeField] private Renderer Renderer;
+        [SerializeField][Required] private Material soilMat;
+        [SerializeField][Required] private Material tilledMat;
+        [SerializeField][Required] private Material wateredMat;
+        [SerializeField][Required] private Renderer Renderer;
+        [SerializeField][Required] private Maize maize;
+
+
+        [SerializeField] private LandState landState = LandState.BeforePloughing;
 
         // Editor Hidden
         private Material switchToMat;
@@ -21,7 +26,19 @@ namespace FARMLIFEVR.LAND
 
         #region Properties
 
-
+        public Maize Maize => maize;
+        public LandState CurrentLandState
+        {
+            get
+            {
+                return landState;
+            }
+            set
+            {
+                landState = value;
+                OnLandStateChanged(landState);
+            }
+        }
 
         #endregion
 
@@ -29,33 +46,22 @@ namespace FARMLIFEVR.LAND
 
         private void Awake()
         {
+            ValidateConstraints();
+        }
 
-        }
-        private void Start()
-        {
-            
-        }
         private void Update()
         {
-
+           if(Input.GetKeyDown(KeyCode.Alpha9))
+           {
+                AdvanceLandState();
+           }
         }
-
         #endregion
 
         #region Private Methods
 
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Changes the State of the Land to the Given LandState
-        /// </summary>
-        /// <param name="landState"></param>
-        public void ChangeLandState(LandState landState)
+        private void OnLandStateChanged(LandState landState)
         {
-            LandState = landState; // Switching the LandState to the Given Value
             switchToMat = soilMat;
             switch (landState)
             {
@@ -74,6 +80,36 @@ namespace FARMLIFEVR.LAND
             GetComponent<Renderer>().material = switchToMat;
         }
 
+        private void ValidateConstraints()
+        {
+            Assert.IsNotNull(soilMat, $"{this.gameObject.name}'s Soil Material is Null!");
+            Assert.IsNotNull(tilledMat, $"{this.gameObject.name}'s Tilled Material is Null!");
+            Assert.IsNotNull(wateredMat, $"{this.gameObject.name}'s Watered Material is Null!");
+            Assert.IsNotNull(Renderer, $"{this.gameObject.name}'s Renderer is Null!");
+            Assert.IsNotNull(maize, $"{this.gameObject.name}'s Maize is Null!");
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Changes the State of the Land to the Given LandState
+        /// </summary>
+        /// <param name="landState"></param>
+        public void ChangeLandState(LandState landState)
+        {
+            CurrentLandState = landState; // Switching the LandState to the Given Value
+            // This Change in State will Invoke the OnStateChanged Method
+        }
+
+
+        public void AdvanceLandState()
+        {
+            if (landState == LandState.BeforePloughing) ChangeLandState(LandState.Ploughed);
+            else if (landState == LandState.Ploughed) ChangeLandState(LandState.Watered);
+            else if (landState == LandState.Watered) ChangeLandState(LandState.BeforePloughing);
+        }
         #endregion
     }
 

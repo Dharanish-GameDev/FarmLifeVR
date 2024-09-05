@@ -1,21 +1,22 @@
 using FARMLIFEVR.EVENTSYSTEM;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {
-	public class MF_HarvestingState : MaizeFeildBaseState
+	public class MF_AfterHarvestingState : MaizeFeildBaseState
 	{
         //Constructor
-        public MF_HarvestingState(MaizeFieldContext context, MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state)
+        public MF_AfterHarvestingState(MaizeFieldContext context, MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state)
         {
             MaizeFieldContext maizeFieldContext = context;
         }
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.AfterHarvesting;
+        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.Seed;
 
         #endregion
 
@@ -28,7 +29,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         public override void EnterState()
         {
-            Debug.Log("<color=#f4bbff> Maize Field Entered Harvesting State </color>");
+            Debug.Log("<color=#f4bbff> Maize Field Entered After Harvesting State </color>");
             EventManager.TriggerEvent(EventNames.MF_OnStateChanged, GetStateKey());
         }
         public override void ExitState()
