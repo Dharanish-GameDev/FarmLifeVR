@@ -62,7 +62,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             return nextState;
         }
-        public override bool GetHasApprovalToSwitchNextState()
+        public override bool GetHasApprovalToSwitchState()
         {
             return true;
         }

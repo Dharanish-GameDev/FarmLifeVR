@@ -1,4 +1,5 @@
 using FARMLIFEVR.EVENTSYSTEM;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,11 +18,34 @@ namespace FARMLIFEVR.CROPS.MAIZE
         [Header("References")]
         [Space(3)]
         [SerializeField] private MaizeVisuals maizeVisuals = new MaizeVisuals();
+
+
+        private bool isSeedPlanted = false;
+
         #endregion
 
         #region Properties
 
-        
+        public bool IsSeedPlanted 
+        {
+            get
+            {
+                return isSeedPlanted;
+            }
+            set 
+            { 
+                isSeedPlanted = value;
+                OnSeedPlanted(value);
+            }
+        }
+
+        private void OnSeedPlanted(bool value)
+        {
+            if (value)
+            {
+                EnableVisualFromHashSet(maizeVisuals.SeedVisual);
+            }
+        }
 
         #endregion
 
@@ -48,6 +72,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             if (parameters.Length == 0) return;
             currentMaizeFieldState = (MaizeFeildStateMachine.EMaizeFieldState)parameters[0]; // Getting Current State from the Params
+            print($"{gameObject.name} : Entered {currentMaizeFieldState} State!");
             switch (currentMaizeFieldState)
             {
                 // Handles Seed State Logic
@@ -110,48 +135,39 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         private void SeedState()
         {
-            Debug.Log("Seed State");
-            EnableVisualFromHashSet(maizeVisuals.SeedVisual);
+            DisableAllVisualInHashSet();
         }
         private void SproutingState()
         {
-            Debug.Log("Sprouting State");
             EnableVisualFromHashSet(maizeVisuals.SproutingVisual);
         }
         private void WaterNeedState()
         {
-            Debug.Log("WaterNeeded State");
             EnableVisualFromHashSet(maizeVisuals.WaterNeededVisual);
         }
         private void SmallPlantState()
         {
-            Debug.Log("SmallPlant State");
             EnableVisualFromHashSet(maizeVisuals.SmallPlantVisual);
         }
         private void MediumPlantState()
         {
-            Debug.Log("MediumPlant State");
             EnableVisualFromHashSet(maizeVisuals.MediumPlantVisual);
         }
         private void PestControlState()
         {
-            Debug.Log("Pest Control State");
             EnableVisualFromHashSet(maizeVisuals.PestControlVisual);
         }
         private void MaturePlantState()
         {
-            Debug.Log("MaturePlant State");
             EnableVisualFromHashSet(maizeVisuals.MaturePlant);
         }
         private void HarvestingState()
         {
-            Debug.Log("Harvestting State");
             EnableVisualFromHashSet(maizeVisuals.HarvestReady);
             maizeVisuals.HarvestReadyMaizeModel.SetActive(true);
         }
         private void AfterHarvestingState()
         {
-            Debug.Log("After Harvesting State");
             EnableVisualFromHashSet(maizeVisuals.AfterHarvest);
         }
 
@@ -174,13 +190,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
             visualsHashSet.Add(maizeVisuals.AfterHarvest);
         }
 
-        private void DisableAllVisualInHashSet()
-        {
-            foreach (var visual in visualsHashSet)
-            {
-                visual.SetActive(false);
-            }
-        }
+        
 
         private void EnableVisualFromHashSet(GameObject visualToEnable)
         {
@@ -192,7 +202,16 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         #region Public Methods
 
-
+        /// <summary>
+        /// It Would disable all the Visual Elements of The Maize
+        /// </summary>
+        public void DisableAllVisualInHashSet()
+        {
+            foreach (var visual in visualsHashSet)
+            {
+                visual.SetActive(false);
+            }
+        }
         #endregion
     }
 

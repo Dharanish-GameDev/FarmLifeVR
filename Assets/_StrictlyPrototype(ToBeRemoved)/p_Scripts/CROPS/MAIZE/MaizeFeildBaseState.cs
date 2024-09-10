@@ -13,6 +13,11 @@ namespace FARMLIFEVR.CROPS.MAIZE
         }
 
         public abstract MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState();
-        public abstract bool GetHasApprovalToSwitchNextState();
+
+        /// <summary>
+        /// Necessary Conditions to be satisfied before Switching to the Another State
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool GetHasApprovalToSwitchState();
     }
 }

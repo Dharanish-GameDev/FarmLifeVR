@@ -5,6 +5,9 @@ using FARMLIFEVR.STATEMACHINE;
 using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
 using FARMLIFEVR.LAND;
+using QFSW.QC;
+using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {
@@ -33,10 +36,13 @@ namespace FARMLIFEVR.CROPS.MAIZE
         private MaizeFieldContext maizeFieldStateContext;
 		private MaizeFeildBaseState currentMaizeFieldState;
         private readonly HashSet<Maize> maizesHashSet = new HashSet<Maize>(); // Using HashSet to avoid Duplicity
+		private readonly HashSet<Land> landsHashSet = new HashSet<Land>();
 
         #endregion
 
         #region Properties
+
+		public HashSet<Land> LandsHashSet => landsHashSet;
 
         #endregion
 
@@ -54,7 +60,9 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			foreach (Land land in landsList)  // Adding All the Elements in the List to The HashSet for Usage
 			{
 				maizesHashSet.Add(land.Maize);
+				landsHashSet.Add(land);
 			}
+		    landsList.Clear();
 		}
         private void OnDisable()
         {
@@ -90,9 +98,27 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			CurrentState = States[EMaizeFieldState.Seed];
 		}
 
-        #endregion
 
-        #region Public Methods
+		//It  will Enable the SeedPlanter Interactable for all The Land in The hashSet.
+		// It Will lead to the Next Task Planting in the Next day.
+		private void EnableSeedPlanterInteractableInLandsHashSet()
+		{
+            foreach (Land land in landsHashSet)
+            {
+				land.EnableSeedPlanterInteractable();
+            }
+        }
+
+		#endregion
+
+		#region Public Methods
+
+		// Need to be Removed Method
+		[Command]
+		public void PlanterInterctable()
+		{
+			EnableSeedPlanterInteractableInLandsHashSet();
+        }
 
         //Overriden Method
         public override void ValidateConstraints() // Validating Refs
@@ -108,10 +134,16 @@ namespace FARMLIFEVR.CROPS.MAIZE
             currentMaizeFieldState = CurrentState as MaizeFeildBaseState;
             if (currentMaizeFieldState != null)
             {
-				if (!currentMaizeFieldState.GetHasApprovalToSwitchNextState()) return;
+				if (!currentMaizeFieldState.GetHasApprovalToSwitchState()) return;
                 SwitchState(currentMaizeFieldState.GetCorrespondingNextState());
             }
         }
+
+		public bool IsAllSeedsPlanted()
+		{
+			return landsHashSet.All(land => land.Maize.IsSeedPlanted);
+		}
+		
         #endregion
     }
 }

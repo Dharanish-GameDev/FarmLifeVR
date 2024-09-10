@@ -84,4 +84,15 @@ FARMLIFE VR NAMESPACES
 
  }
 
+
+ 10.FARMLIFEVR.SIMPLEINTERACTABLES
+ {
+
+ }
+
+ 11.FARMLIFEVR.FARMTOOLS
+ {
+   .Tool_GrubbingHoeInteractable
+ }
+
 }

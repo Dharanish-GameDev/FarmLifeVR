@@ -1,8 +1,10 @@
 using FARMLIFEVR.CROPS.MAIZE;
+using FARMLIFEVR.EVENTSYSTEM;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using FARMLIFEVR.SIMPLEINTERACTABLES;
 
 namespace FARMLIFEVR.LAND
 {
@@ -16,7 +18,7 @@ namespace FARMLIFEVR.LAND
         [SerializeField][Required] private Material wateredMat;
         [SerializeField][Required] private Renderer Renderer;
         [SerializeField][Required] private Maize maize;
-
+        [SerializeField][Required] private SeedPlanterInteractable seedPlanterInteractable;
 
         [SerializeField] private LandState landState = LandState.BeforePloughing;
 
@@ -47,6 +49,20 @@ namespace FARMLIFEVR.LAND
         private void Awake()
         {
             ValidateConstraints();
+            CurrentLandState = landState;
+            maize.DisableAllVisualInHashSet();
+            seedPlanterInteractable.OnTriedToPlant += SeedPlanterInteractable_OnTriedToPlant;
+           
+        }
+        private void OnDisable()
+        {
+            seedPlanterInteractable.OnTriedToPlant -= SeedPlanterInteractable_OnTriedToPlant;
+        }
+        private void SeedPlanterInteractable_OnTriedToPlant()
+        {
+            Debug.Log($"{gameObject.name}'s SeedPlanterInteractable Tried To Plant");
+            seedPlanterInteractable.gameObject.SetActive( false );
+            maize.IsSeedPlanted = true;
         }
 
         private void Update()
@@ -67,6 +83,7 @@ namespace FARMLIFEVR.LAND
             {
                 case LandState.BeforePloughing:
                     switchToMat = soilMat;
+                    seedPlanterInteractable.gameObject.SetActive(false);
                     break;
 
                 case LandState.Ploughed:
@@ -75,6 +92,7 @@ namespace FARMLIFEVR.LAND
 
                 case LandState.Watered:
                     switchToMat = wateredMat;
+                    seedPlanterInteractable.gameObject.SetActive(false);
                     break;
             }
             GetComponent<Renderer>().material = switchToMat;
@@ -102,14 +120,22 @@ namespace FARMLIFEVR.LAND
             CurrentLandState = landState; // Switching the LandState to the Given Value
             // This Change in State will Invoke the OnStateChanged Method
         }
-
-
         public void AdvanceLandState()
         {
             if (landState == LandState.BeforePloughing) ChangeLandState(LandState.Ploughed);
             else if (landState == LandState.Ploughed) ChangeLandState(LandState.Watered);
             else if (landState == LandState.Watered) ChangeLandState(LandState.BeforePloughing);
         }
+
+
+        // It will Enable the Seed PlanterInteractable when the Land Entered Ploughed State.
+        public void EnableSeedPlanterInteractable()
+        {
+            if (landState != LandState.Ploughed) return;
+            if (maize.IsSeedPlanted) return; // Checks the Plants is Already Planted Before Enabling SeedPlanter Interactable 
+            seedPlanterInteractable.gameObject.SetActive(true);
+        }
+
         #endregion
     }
 

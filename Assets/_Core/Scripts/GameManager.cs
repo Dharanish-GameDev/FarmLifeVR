@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
  
 
@@ -57,6 +58,11 @@ public class GameManager : MonoBehaviour
 
 	#region Private Methods
 
+	private void ValidateConstraints()
+	{
+		Assert.IsNotNull(playerTransform, "The Player Transform is Null!");
+		Assert.IsNotNull(PetDestinationPoint, "Pet Destination Point is Null");
+	}
 
 	#endregion
 

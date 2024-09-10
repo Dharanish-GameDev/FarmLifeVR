@@ -1,5 +1,6 @@
 using FARMLIFEVR.EVENTSYSTEM;
 using UnityEngine;
+using System.Linq;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {
@@ -18,6 +19,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         #endregion
 
         #region Private Methods
+
 
         #endregion
 
@@ -58,9 +60,9 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             return nextState;
         }
-        public override bool GetHasApprovalToSwitchNextState()
+        public override bool GetHasApprovalToSwitchState()
         {
-            return true;
+            return maizeFieldContext.MaizeFeildStateMachine.IsAllSeedsPlanted(); // If All the Seeds are Planted Give Apporoval to Change to Next State
         }
 
         #endregion

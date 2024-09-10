@@ -35,6 +35,10 @@ public abstract class OverLapChecker : MonoBehaviour
     [ConditionalField("overLapCheckingType",E_OverLapCheckingType.PerInterval)]
     [SerializeField] private float interval = 0.2f; // Interval in seconds
 
+    [Tooltip("If its Enabled then PerInterval Checking coroutine will be trigged in Start Method")]
+    [ConditionalField("overLapCheckingType", E_OverLapCheckingType.PerInterval)]
+    [SerializeField] private bool CheckFromStart = false;
+
     [ConditionalField("overLapShape", E_OverLapShape.Box)]
     [SerializeField] private Vector3 boxSize = new Vector3(1f, 1f, 1f); // Size of the box for the overlap check
 
@@ -73,7 +77,13 @@ public abstract class OverLapChecker : MonoBehaviour
     private void Start()
     {
         if (overLapCheckingType == E_OverLapCheckingType.PerInterval)
-            StartCoroutine(CheckOverlapEveryInterval());
+        {
+            if(CheckFromStart)
+            {
+                StartCoroutine(CheckOverlapEveryInterval());
+                print("Hello");
+            }
+        }
     }
 
     #endregion

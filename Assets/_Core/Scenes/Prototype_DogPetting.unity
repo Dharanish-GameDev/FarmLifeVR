@@ -1801,7 +1801,7 @@ GameObject:
   - component: {fileID: 1277970109}
   - component: {fileID: 1277970111}
   - component: {fileID: 1277970110}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Interactable
   m_TagString: Untagged
   m_Icon: {fileID: 0}

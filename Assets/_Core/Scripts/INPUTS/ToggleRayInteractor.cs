@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.Assertions;
 
 namespace FARMLIFEVR.INPUT
 {
@@ -10,7 +11,7 @@ namespace FARMLIFEVR.INPUT
         #region Private Variables
 
         [Tooltip("The Direct its need to switch with")]
-        [SerializeField] private XRDirectInteractor directInteractor;
+        [SerializeField] [Required] private XRDirectInteractor directInteractor;
 
         [Tooltip("Toggling ray interactor even if an Object is selected on Direct Interactor")]
         [SerializeField] private bool forceToggle = false;
@@ -35,6 +36,7 @@ namespace FARMLIFEVR.INPUT
         private void Awake()
         {
             rayInteractor = GetComponent<XRRayInteractor>();
+            ValidateConstraints();
             SwitchRayInteractor(false);
         }
         private void Start()
@@ -62,6 +64,11 @@ namespace FARMLIFEVR.INPUT
             interactableList.Clear();
             directInteractor.GetValidTargets(interactableList);
             return (interactableList.Count > 0);
+        }
+
+        private void ValidateConstraints()
+        {
+            Assert.IsNotNull(directInteractor,"Direct Interactor is Null!");
         }
 
         #endregion
