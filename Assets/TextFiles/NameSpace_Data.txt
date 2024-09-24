@@ -12,6 +12,8 @@ FARMLIFE VR NAMESPACES
 {
 .Land
 .LandPlougher
+.WaterCanal
+
 }
 
 3. FARMLIFEVR.HANDS
@@ -87,12 +89,15 @@ FARMLIFE VR NAMESPACES
 
  10.FARMLIFEVR.SIMPLEINTERACTABLES
  {
-
+   .BaseSimpleInteractable
+   .SeedPlanterInteractable
+   .MaizeCollectableInteractable
  }
 
  11.FARMLIFEVR.FARMTOOLS
  {
    .Tool_GrubbingHoeInteractable
+   .Tool_GrubbingHoeOverlapChecker
  }
 
 }

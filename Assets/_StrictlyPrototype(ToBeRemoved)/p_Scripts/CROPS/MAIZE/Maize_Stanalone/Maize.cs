@@ -21,6 +21,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
 
         private bool isSeedPlanted = false;
+        private bool isWatered = false;
 
         #endregion
 
@@ -36,6 +37,27 @@ namespace FARMLIFEVR.CROPS.MAIZE
             { 
                 isSeedPlanted = value;
                 OnSeedPlanted(value);
+            }
+        }
+
+        public bool IsWatered
+        {
+            get
+            {
+                return isWatered;
+            }
+            set 
+            {
+                isWatered = value;
+                OnWatered(value);
+            }
+        }
+
+        private void OnWatered(bool value)
+        {
+            if (value)
+            {
+                maizeVisuals.WaterNeededUI.SetActive(false);
             }
         }
 
@@ -144,6 +166,8 @@ namespace FARMLIFEVR.CROPS.MAIZE
         private void WaterNeedState()
         {
             EnableVisualFromHashSet(maizeVisuals.WaterNeededVisual);
+            isWatered = false;
+            maizeVisuals.WaterNeededUI.SetActive(true);
         }
         private void SmallPlantState()
         {
@@ -181,6 +205,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
             visualsHashSet.Add(maizeVisuals.SeedVisual);
             visualsHashSet.Add(maizeVisuals.SproutingVisual);
             visualsHashSet.Add(maizeVisuals.WaterNeededVisual);
+            visualsHashSet.Add(maizeVisuals.WaterNeededUI);
             visualsHashSet.Add(maizeVisuals.SmallPlantVisual);
             visualsHashSet.Add(maizeVisuals.MediumPlantVisual);
             visualsHashSet.Add(maizeVisuals.PestControlVisual);
@@ -221,6 +246,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         [SerializeField] [Required] private GameObject seedVisual;
         [SerializeField] [Required] private GameObject sproutingVisual;
         [SerializeField] [Required] private GameObject waterNeededVisual;
+        [SerializeField] [Required] private GameObject waterNeededUI;
         [SerializeField] [Required] private GameObject smallPlantVisual;
         [SerializeField] [Required] private GameObject mediumPlantVisual;
         [SerializeField] [Required] private GameObject pestControlVisual;
@@ -234,6 +260,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         public GameObject SeedVisual => seedVisual;
         public GameObject SproutingVisual => sproutingVisual;
         public GameObject WaterNeededVisual => waterNeededVisual;
+        public GameObject WaterNeededUI => waterNeededUI;
         public GameObject SmallPlantVisual => smallPlantVisual;
         public GameObject MediumPlantVisual => mediumPlantVisual;
         public GameObject PestControlVisual => pestControlVisual;

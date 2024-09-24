@@ -6,7 +6,6 @@ using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
 using FARMLIFEVR.LAND;
 using QFSW.QC;
-using System.Runtime.InteropServices;
 using System.Linq;
 
 namespace FARMLIFEVR.CROPS.MAIZE
@@ -120,6 +119,16 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			EnableSeedPlanterInteractableInLandsHashSet();
         }
 
+		// Need to be Removed Method
+		[Command]
+		public void PlantsSeeds()
+		{
+            foreach (Land land in landsHashSet)
+            {
+				land.PlantSeed();
+            }
+        }
+
         //Overriden Method
         public override void ValidateConstraints() // Validating Refs
         {
@@ -139,11 +148,28 @@ namespace FARMLIFEVR.CROPS.MAIZE
             }
         }
 
-		public bool IsAllSeedsPlanted()
+		public bool IsInWaterNeededState()
+		{
+			return CurrentState.GetStateKey() == EMaizeFieldState.WaterNeeded;
+		}
+
+
+        #region Conditions to Switch State
+
+        public bool IsAllSeedsPlanted()
 		{
 			return landsHashSet.All(land => land.Maize.IsSeedPlanted);
 		}
-		
+		public bool IsAllWaterCanalsGrubbed()
+		{
+			return GameManager.Instance.IrrigationManager.IsAllCanalsGrubbed();
+		}
+		public bool IsAllPlantsWatered()
+		{
+			return landsHashSet.All(x=>x.Maize.IsWatered);
+		}
+        #endregion
+
         #endregion
     }
 }

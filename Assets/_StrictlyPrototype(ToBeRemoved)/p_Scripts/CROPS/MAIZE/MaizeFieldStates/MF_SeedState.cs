@@ -1,6 +1,5 @@
 using FARMLIFEVR.EVENTSYSTEM;
 using UnityEngine;
-using System.Linq;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {

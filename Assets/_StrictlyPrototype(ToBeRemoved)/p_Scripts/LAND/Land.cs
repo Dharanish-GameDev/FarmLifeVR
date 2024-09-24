@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using FARMLIFEVR.SIMPLEINTERACTABLES;
 
+
 namespace FARMLIFEVR.LAND
 {
     public class Land : MonoBehaviour
@@ -13,14 +14,16 @@ namespace FARMLIFEVR.LAND
         #region Private Variables
 
         // Editor Exposed
-        [SerializeField][Required] private Material soilMat;
-        [SerializeField][Required] private Material tilledMat;
-        [SerializeField][Required] private Material wateredMat;
         [SerializeField][Required] private Renderer Renderer;
         [SerializeField][Required] private Maize maize;
         [SerializeField][Required] private SeedPlanterInteractable seedPlanterInteractable;
 
         [SerializeField] private LandState landState = LandState.BeforePloughing;
+
+
+        [Space(5)]
+        [Header("Land Visuals Struct")]
+        [SerializeField] private LandVisuals landVisuals;
 
         // Editor Hidden
         private Material switchToMat;
@@ -58,12 +61,6 @@ namespace FARMLIFEVR.LAND
         {
             seedPlanterInteractable.OnTriedToPlant -= SeedPlanterInteractable_OnTriedToPlant;
         }
-        private void SeedPlanterInteractable_OnTriedToPlant()
-        {
-            Debug.Log($"{gameObject.name}'s SeedPlanterInteractable Tried To Plant");
-            seedPlanterInteractable.gameObject.SetActive( false );
-            maize.IsSeedPlanted = true;
-        }
 
         private void Update()
         {
@@ -78,33 +75,38 @@ namespace FARMLIFEVR.LAND
 
         private void OnLandStateChanged(LandState landState)
         {
-            switchToMat = soilMat;
+            switchToMat = landVisuals.SoilMat;
             switch (landState)
             {
                 case LandState.BeforePloughing:
-                    switchToMat = soilMat;
+                    switchToMat = landVisuals.SoilMat;
                     seedPlanterInteractable.gameObject.SetActive(false);
                     break;
 
                 case LandState.Ploughed:
-                    switchToMat = tilledMat;
+                    switchToMat = landVisuals.TilledMat;
                     break;
 
                 case LandState.Watered:
-                    switchToMat = wateredMat;
+                    switchToMat = landVisuals.WateredMat;
                     seedPlanterInteractable.gameObject.SetActive(false);
                     break;
             }
             GetComponent<Renderer>().material = switchToMat;
         }
-
         private void ValidateConstraints()
         {
-            Assert.IsNotNull(soilMat, $"{this.gameObject.name}'s Soil Material is Null!");
-            Assert.IsNotNull(tilledMat, $"{this.gameObject.name}'s Tilled Material is Null!");
-            Assert.IsNotNull(wateredMat, $"{this.gameObject.name}'s Watered Material is Null!");
+            Assert.IsNotNull(landVisuals.SoilMat, $"{this.gameObject.name}'s Soil Material is Null!");
+            Assert.IsNotNull(landVisuals.TilledMat, $"{this.gameObject.name}'s Tilled Material is Null!");
+            Assert.IsNotNull(landVisuals.WateredMat, $"{this.gameObject.name}'s Watered Material is Null!");
             Assert.IsNotNull(Renderer, $"{this.gameObject.name}'s Renderer is Null!");
             Assert.IsNotNull(maize, $"{this.gameObject.name}'s Maize is Null!");
+        }
+        private void SeedPlanterInteractable_OnTriedToPlant()
+        {
+            Debug.Log($"{gameObject.name}'s SeedPlanterInteractable Tried To Plant");
+            seedPlanterInteractable.gameObject.SetActive(false);
+            maize.IsSeedPlanted = true;
         }
 
         #endregion
@@ -127,7 +129,6 @@ namespace FARMLIFEVR.LAND
             else if (landState == LandState.Watered) ChangeLandState(LandState.BeforePloughing);
         }
 
-
         // It will Enable the Seed PlanterInteractable when the Land Entered Ploughed State.
         public void EnableSeedPlanterInteractable()
         {
@@ -136,12 +137,38 @@ namespace FARMLIFEVR.LAND
             seedPlanterInteractable.gameObject.SetActive(true);
         }
 
+        // NEED TO BE REMOVED
+        public void PlantSeed()
+        {
+            SeedPlanterInteractable_OnTriedToPlant();
+        }
+
         #endregion
     }
 
     public enum LandState
     {
         BeforePloughing,Ploughed,Watered
+    }
+
+    /// <summary>
+    /// A Struct that holds all the Visual Elements of the Land
+    /// </summary>
+    [System.Serializable]
+    public struct LandVisuals
+    {
+        [SerializeField][Required] private Material soilMat;
+        [SerializeField][Required] private Material tilledMat;
+        [SerializeField][Required] private Material wateredMat;
+
+
+
+        #region Properties
+        public Material SoilMat => soilMat;
+        public Material TilledMat => tilledMat; 
+        public Material WateredMat => tilledMat;
+
+        #endregion
     }
 }
 

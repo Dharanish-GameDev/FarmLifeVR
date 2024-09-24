@@ -31,6 +31,8 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered Sprouting State </color>");
             EventManager.TriggerEvent(EventNames.MF_OnStateChanged,GetStateKey());
+
+            // TODO : MAKE PLAYER GRUB THE WATER CANAL GROUND
         }
         public override void ExitState()
         {
@@ -64,7 +66,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         }
         public override bool GetHasApprovalToSwitchState()
         {
-            return true;
+            return maizeFieldContext.MaizeFeildStateMachine.IsAllWaterCanalsGrubbed();
         }
 
         #endregion

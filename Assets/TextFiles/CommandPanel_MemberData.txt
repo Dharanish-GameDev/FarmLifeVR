@@ -2,3 +2,11 @@ FARMLIFE VR COMMANDS LIST
 
 1.Ox_Mover 
 .StartUTurn(bool turnLeft)
+
+2.MaizeFieldStateMachine
+.PlanterInteractable
+.PlantsSeeds
+
+3.IrrigationManager
+.Grub
+.Irrigation

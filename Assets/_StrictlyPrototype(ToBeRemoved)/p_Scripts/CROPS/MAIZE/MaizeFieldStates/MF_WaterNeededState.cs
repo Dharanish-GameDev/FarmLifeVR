@@ -34,7 +34,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         }
         public override void ExitState()
         {
-
+            GameManager.Instance.IrrigationManager.ResetWaterCanal();
         }
         public override void UpdateState()
         {
@@ -65,7 +65,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         public override bool GetHasApprovalToSwitchState()
         {
-            return true;
+            return maizeFieldContext.MaizeFeildStateMachine.IsAllPlantsWatered();
         }
 
         #endregion

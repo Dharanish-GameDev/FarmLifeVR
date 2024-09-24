@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
- 
+using FARMLIFEVR.LAND;
+using FARMLIFEVR.CROPS.MAIZE;
+
 
 [DefaultExecutionOrder(-1)] // To Execute this class's OnEnable before Anything else
 public class GameManager : MonoBehaviour
@@ -12,14 +14,25 @@ public class GameManager : MonoBehaviour
 
 	#region Private Variables
 
-	[Header("References")]
-	[Space(5)]
+	[Header("Player Related")]
+	[Space(3)]
 
 	[Tooltip("Player's Transform Component")]
 	[SerializeField][Required] private Transform playerTransform;
 
 	[Tooltip("Its the Point attached to the player where the dog will when its called")]
-	[SerializeField][Required] private Transform petDestinationPoint; 
+	[SerializeField][Required] private Transform petDestinationPoint;
+
+	[Space(5)]
+
+	[Header("Script Refs")]
+	[Space(3)]
+
+	[Tooltip("Its the Script that controls watering in the Games")]
+	[SerializeField] [Required] private IrrigationManager irrigationManager;
+
+	[Tooltip("Its the Script that handles all the Maize behaviour in the Game")]
+	[SerializeField] [Required] private MaizeFeildStateMachine maizeFeildStateMachine;
 
 
 	#endregion
@@ -28,6 +41,8 @@ public class GameManager : MonoBehaviour
 
 	public Transform PlayerTransform => playerTransform;
 	public Transform PetDestinationPoint => petDestinationPoint;
+	public IrrigationManager IrrigationManager => irrigationManager;
+	public MaizeFeildStateMachine MaizeFeildStateMachine => maizeFeildStateMachine;
 
     #endregion
 

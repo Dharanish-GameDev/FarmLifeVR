@@ -62,7 +62,6 @@ public abstract class OverLapChecker : MonoBehaviour
 #endif
 
     protected bool onHitCalled = false; // To track if the onHit callback has been called
-    [SerializeField] // For Viewing Purpose only
     protected Collider[] hitColliders = new Collider[10]; // Increased size to capture multiple colliders
     protected HashSet<Collider> previousColliders = new HashSet<Collider>(); // Track previous colliders
     Vector3 center;
@@ -70,6 +69,8 @@ public abstract class OverLapChecker : MonoBehaviour
     Vector3 capsulePoint2;
     int numHits;
 
+
+    Coroutine coroutine;
     #endregion
 
     #region LifeCycle Methods
@@ -80,8 +81,7 @@ public abstract class OverLapChecker : MonoBehaviour
         {
             if(CheckFromStart)
             {
-                StartCoroutine(CheckOverlapEveryInterval());
-                print("Hello");
+                StartOverlapCheckingByInterval();
             }
         }
     }
@@ -165,6 +165,25 @@ public abstract class OverLapChecker : MonoBehaviour
     {
         center = transform.position + transform.rotation * offset;
         return PerformShapeOverlapCheck(center) > 0 ? true : false;
+    }
+
+    /// <summary>
+    /// It Starts a Coroutine to check for the Overlap by interval and it ends anyother overlap Checking Coroutine.
+    /// </summary>
+    public void StartOverlapCheckingByInterval()
+    {
+        if (coroutine != null) return;
+        coroutine = StartCoroutine(CheckOverlapEveryInterval());
+    }
+
+    /// <summary>
+    /// Its Stops any other Overlap Checking Coroutine that is currently running.
+    /// </summary>
+    public void StopOverlapCheckingByInterval()
+    {
+        if (coroutine == null) return;
+        StopCoroutine(coroutine);
+        coroutine = null;
     }
 
     #endregion
