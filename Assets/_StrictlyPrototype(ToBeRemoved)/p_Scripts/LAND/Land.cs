@@ -16,7 +16,7 @@ namespace FARMLIFEVR.LAND
         // Editor Exposed
         [SerializeField][Required] private Renderer Renderer;
         [SerializeField][Required] private Maize maize;
-        [SerializeField][Required] private SeedPlanterInteractable seedPlanterInteractable;
+        [SerializeField][Required] private MaizeRootInteractable maizeRootInteractable;
 
         [SerializeField] private LandState landState = LandState.BeforePloughing;
 
@@ -54,12 +54,12 @@ namespace FARMLIFEVR.LAND
             ValidateConstraints();
             CurrentLandState = landState;
             maize.DisableAllVisualInHashSet();
-            seedPlanterInteractable.OnTriedToPlant += SeedPlanterInteractable_OnTriedToPlant;
+            maizeRootInteractable.OnTriedToInteractRoot += MaizeRootInteractable_OnTriedToInteract;
            
         }
         private void OnDisable()
         {
-            seedPlanterInteractable.OnTriedToPlant -= SeedPlanterInteractable_OnTriedToPlant;
+            maizeRootInteractable.OnTriedToInteractRoot -= MaizeRootInteractable_OnTriedToInteract;
         }
 
         private void Update()
@@ -80,7 +80,7 @@ namespace FARMLIFEVR.LAND
             {
                 case LandState.BeforePloughing:
                     switchToMat = landVisuals.SoilMat;
-                    seedPlanterInteractable.gameObject.SetActive(false);
+                    maizeRootInteractable.gameObject.SetActive(false);
                     break;
 
                 case LandState.Ploughed:
@@ -89,7 +89,7 @@ namespace FARMLIFEVR.LAND
 
                 case LandState.Watered:
                     switchToMat = landVisuals.WateredMat;
-                    seedPlanterInteractable.gameObject.SetActive(false);
+                    maizeRootInteractable.gameObject.SetActive(false);
                     break;
             }
             GetComponent<Renderer>().material = switchToMat;
@@ -102,11 +102,18 @@ namespace FARMLIFEVR.LAND
             Assert.IsNotNull(Renderer, $"{this.gameObject.name}'s Renderer is Null!");
             Assert.IsNotNull(maize, $"{this.gameObject.name}'s Maize is Null!");
         }
-        private void SeedPlanterInteractable_OnTriedToPlant()
+        private void MaizeRootInteractable_OnTriedToInteract()
         {
-            Debug.Log($"{gameObject.name}'s SeedPlanterInteractable Tried To Plant");
-            seedPlanterInteractable.gameObject.SetActive(false);
-            maize.IsSeedPlanted = true;
+            maizeRootInteractable.gameObject.SetActive(false);
+            if(maize.isInSeedState)
+            {
+                maize.IsSeedPlanted = true;
+            }
+            else
+            {
+                maize.IsFertilized = true;
+            }
+            
         }
 
         #endregion
@@ -133,14 +140,39 @@ namespace FARMLIFEVR.LAND
         public void EnableSeedPlanterInteractable()
         {
             if (landState != LandState.Ploughed) return;
-            if (maize.IsSeedPlanted) return; // Checks the Plants is Already Planted Before Enabling SeedPlanter Interactable 
-            seedPlanterInteractable.gameObject.SetActive(true);
+            if (maize.IsSeedPlanted && maize.IsFertilized) return; // Checks the Plants is Already Planted or Fertilized Before Enabling
+            maizeRootInteractable.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// This Method sets the Individual Water Blocks Local Pos which belongs to Land and the Water Block will Activate when the Land is Being Irrigated
+        /// </summary>
+        public void SetIndividualWaterBlockLocalPosition(Vector3 localPos)
+        {
+            localPos.y = landVisuals.IndividualWaterBlock.localPosition.y;
+            landVisuals.IndividualWaterBlock.localPosition = localPos;
+        }
+
+        /// <summary>
+        /// This Method will Enable the Land's Water Block Visual during Irrigarion
+        /// </summary>
+        public void EnableIndividualWaterBlock()
+        {
+            landVisuals.IndividualWaterBlock.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// This Method will Disable the Land's Water Block Visual during UnIrrigarion
+        /// </summary>
+        public void DisableIndividualWaterBlock()
+        {
+            landVisuals.IndividualWaterBlock.gameObject.SetActive(false);
         }
 
         // NEED TO BE REMOVED
         public void PlantSeed()
         {
-            SeedPlanterInteractable_OnTriedToPlant();
+            MaizeRootInteractable_OnTriedToInteract();
         }
 
         #endregion
@@ -160,13 +192,14 @@ namespace FARMLIFEVR.LAND
         [SerializeField][Required] private Material soilMat;
         [SerializeField][Required] private Material tilledMat;
         [SerializeField][Required] private Material wateredMat;
-
+        [SerializeField][Required] private Transform individualWaterBlock;
 
 
         #region Properties
         public Material SoilMat => soilMat;
         public Material TilledMat => tilledMat; 
         public Material WateredMat => tilledMat;
+        public Transform IndividualWaterBlock => individualWaterBlock;
 
         #endregion
     }

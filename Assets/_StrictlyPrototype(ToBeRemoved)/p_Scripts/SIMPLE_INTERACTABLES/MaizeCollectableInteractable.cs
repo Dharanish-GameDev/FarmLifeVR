@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using FARMLIFEVR.EVENTSYSTEM;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace FARMLIFEVR.SIMPLEINTERACTABLES
@@ -10,6 +8,8 @@ namespace FARMLIFEVR.SIMPLEINTERACTABLES
         protected override void OnSelectEntered(SelectEnterEventArgs args)
         {
             base.OnSelectEntered(args);
+            EventManager.TriggerEvent(EventNames.HarvestReadyMaizeCollected);
+            gameObject.SetActive(false);
         }
     }
 }

@@ -41,6 +41,7 @@ namespace FARMLIFEVR.LAND
         private void Awake()
         {
             waterCanalMainLayerMask = gameObject.layer;
+            waterVisual.SetActive(false);
         }
 
         #endregion
@@ -99,6 +100,22 @@ namespace FARMLIFEVR.LAND
             waterVisual.SetActive(false);
         }
 
+        public void AlignLandsWaterBlock(Vector3 localPos)
+        {
+            foreach(var land in landsColumnList)
+            {
+                land.SetIndividualWaterBlockLocalPosition(localPos);
+            }
+        }
+
+        public void DisableIndividualWaterBlocksVisual()
+        {
+            foreach (var land in landsColumnList)
+            {
+                land.DisableIndividualWaterBlock();
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -108,6 +125,10 @@ namespace FARMLIFEVR.LAND
             meshRenderer.material = mat;
         }
 
+        /// <summary>
+        /// This Method actually irrigates the Land Present Within its Column
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator IrrigateLands()
         {
             if(landsColumnList.All(x => x.Maize.IsWatered)) yield return null;
@@ -116,8 +137,11 @@ namespace FARMLIFEVR.LAND
             {
                 yield return new WaitForSeconds(1);
                 land.Maize.IsWatered = true;
+                land.EnableIndividualWaterBlock();
             }
         }
+
+        // Ungrubbing the Land of the Water Canal for the Next day.
         private void UnGrubLand()
         {
             if (!isGrubbed) return;
@@ -125,6 +149,8 @@ namespace FARMLIFEVR.LAND
             ChangeMaterial(dirtMat);
             gameObject.layer = waterCanalMainLayerMask; // Its To Avoid Further OverLapping Registed
         }
+
+        //It UnIrrigates the Land By Setting the IsWatered Property of The Maize to False and Disabling its Individual Water Blocks.
         private void UnIrrigateLand()
         {
             if (landsColumnList.All(x => !x.Maize.IsWatered)) return;
@@ -132,9 +158,11 @@ namespace FARMLIFEVR.LAND
             foreach (var land in landsColumnList)
             {
                 land.Maize.IsWatered = false;
-                Debug.Log($"{land.name} : is UnIrrigated");
+                land.DisableIndividualWaterBlock();
             }
         }
+
+
         #endregion
     }
 }

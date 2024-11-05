@@ -44,6 +44,8 @@ FARMLIFE VR NAMESPACES
 7.FARMLIFEVR.VOICEEXPERIENCE
 {
   .VoiceIntentManager
+  .AudioLoudnessDedection
+  .MicManager
 }
 
 8.FARMLIFEVR.CATTLES.DOG
@@ -75,15 +77,15 @@ FARMLIFE VR NAMESPACES
  {
   // MF - Maize Field
 
-  1.MF_SeedState,
-  2.MF_SproutingState,
-  3.MF_WaterNeededState,
-  4.MF_SmallPlantState,
-  5.MF_MediumPlantState,
-  6.MF_PestControlState,
-  7.MF_MaturePlantState,
-  8.MF_HarvestState
-
+  1.MF_SeedState
+  2.MF_SproutingState
+  3.MF_WaterNeededState
+  4.MF_PestState
+  5.MF_FertilizingPlantState
+  6.MF_PestControlState
+  7.MF_ShoutBirdsPlantState
+  8.MF_HarvestingState
+  9.MF_AfterHarvestingState
  }
 
 
@@ -92,12 +94,22 @@ FARMLIFE VR NAMESPACES
    .BaseSimpleInteractable
    .SeedPlanterInteractable
    .MaizeCollectableInteractable
+   .PipeInteractable
  }
 
  11.FARMLIFEVR.FARMTOOLS
  {
    .Tool_GrubbingHoeInteractable
    .Tool_GrubbingHoeOverlapChecker
+   .Tool_SimpleRope
+   .Tool_PesticideSprayerGun
+   .Tool_PesticideOverlapChecker
+   .Tool_MegaphoneInteractable
+ }
+
+ 12.FARMLIFEVR.USERINTERFACE
+ {
+  .BirdShoutingCanvas
  }
 
 }

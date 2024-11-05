@@ -66,7 +66,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         }
         public override bool GetHasApprovalToSwitchState()
         {
-            return maizeFieldContext.MaizeFeildStateMachine.IsAllWaterCanalsGrubbed();
+            return true;//maizeFieldContext.MaizeFeildStateMachine.IsAllWaterCanalsGrubbed();
         }
 
         #endregion

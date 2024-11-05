@@ -730,9 +730,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1a7b995ac5aa043ba267009996425f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overLapCheckingType: 0
+  overLapCheckingType: 1
   overLapShape: 0
   interval: 0.2
+  CheckFromStart: 1
   boxSize: {x: 0.2, y: 0.2, z: 2.88}
   sphereRadius: 1
   capsuleRadius: 1
@@ -742,8 +743,6 @@ MonoBehaviour:
     m_Bits: 64
   offset: {x: 0, y: 1, z: 1.66}
   overLapGizmoColor: {r: 0, g: 0, b: 0, a: 0}
-  hitColliders:
-  - {fileID: 0}
 --- !u!1 &1104272286
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,6 +1078,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 589919100826675979, guid: 5613d47d9a2458441b233665cfbcdc54,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2205622569659824030, guid: 5613d47d9a2458441b233665cfbcdc54,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2233914226544825910, guid: 5613d47d9a2458441b233665cfbcdc54,
         type: 3}
       propertyPath: m_LocalPosition.x

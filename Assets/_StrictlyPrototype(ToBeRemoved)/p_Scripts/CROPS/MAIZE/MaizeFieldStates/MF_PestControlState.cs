@@ -15,7 +15,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.MaturePlant;
+        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.ShoutBirds;
 
         #endregion
 
@@ -30,10 +30,11 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered PestControl State </color>");
             EventManager.TriggerEvent(EventNames.MF_OnStateChanged, GetStateKey());
+            maizeFieldContext.PesticideSprayerInteractable.ShowPesticideSprayInteractable();
         }
         public override void ExitState()
         {
-
+            maizeFieldContext.PesticideSprayerInteractable.HidePesticideSprayInteractable();
         }
         public override void UpdateState()
         {
@@ -47,7 +48,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         public override void OnTriggerEnterState(Collider other)
         {
-
+            
         }
         public override void OnTriggerStayState(Collider other)
         {

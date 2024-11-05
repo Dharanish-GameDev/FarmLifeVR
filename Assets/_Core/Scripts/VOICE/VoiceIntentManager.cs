@@ -26,6 +26,18 @@ namespace FARMLIFEVR.VOICEEXPERIENCE
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.RightShift))
+            {
+                StartListening();
+            }
+            if (Input.GetKeyUp(KeyCode.RightShift))
+            {
+                StopListening();
+            }
+        }
+
         private void OnDestroy()
         {
             if (appVoiceExperience != null && appVoiceExperience.VoiceEvents != null)

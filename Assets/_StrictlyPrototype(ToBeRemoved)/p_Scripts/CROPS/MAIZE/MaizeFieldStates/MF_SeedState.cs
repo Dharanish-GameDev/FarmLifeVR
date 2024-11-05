@@ -28,6 +28,10 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered Seed State </color>");
             EventManager.TriggerEvent(EventNames.MF_OnStateChanged,GetStateKey());
+            maizeFieldContext.MaizeFeildStateMachine.MakeAllSeedsUnplanted();
+            maizeFieldContext.PipeInteractable.ResetPipeInteractable();
+            maizeFieldContext.PesticideSprayerInteractable.HidePesticideSprayInteractable();
+            maizeFieldContext.MegaphoneInteractable.HideMegaphoneInteractable();
         }
         public override void ExitState()
         {

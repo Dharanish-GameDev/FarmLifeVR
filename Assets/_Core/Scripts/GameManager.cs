@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
@@ -7,7 +5,7 @@ using FARMLIFEVR.LAND;
 using FARMLIFEVR.CROPS.MAIZE;
 
 
-[DefaultExecutionOrder(-1)] // To Execute this class's OnEnable before Anything else
+[DefaultExecutionOrder(-2)] // To Execute this class's OnEnable before Anything else
 public class GameManager : MonoBehaviour
 {
 	public static GameManager Instance { get; private set; }
@@ -47,42 +45,38 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region LifeCycle Methods
-
+    private void Awake()
+	{
+        if (Instance != null && Instance != this)
+		{
+			Destroy(gameObject);
+			return;
+		}
+        Instance = this;
+    }
     private void OnEnable()
     {
         EventManager.InitializeEventDictionary();
+		EventManager.StartListening(EventNames.HarvestReadyMaizeCollected, OnMaizeCollected);
     }
-    private void Awake()
-	{
-		if(Instance == null)
-		{
-			Instance = this;
-		}
-        
-    }
-	private void Start()
-	{
+    #endregion
 
-	}
-	private void Update()
-	{
+    #region Private Methods
 
-	}
-	
-	#endregion
-
-	#region Private Methods
-
-	private void ValidateConstraints()
+    private void ValidateConstraints()
 	{
 		Assert.IsNotNull(playerTransform, "The Player Transform is Null!");
 		Assert.IsNotNull(PetDestinationPoint, "Pet Destination Point is Null");
 	}
 
-	#endregion
+	private void OnMaizeCollected()
+	{
+		Debug.Log("Maize Collected");
+	}
+    #endregion
 
-	#region Public Methods
+    #region Public Methods
 
 
-	#endregion
+    #endregion
 }

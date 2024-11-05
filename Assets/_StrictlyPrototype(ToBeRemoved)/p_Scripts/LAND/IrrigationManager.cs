@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using QFSW.QC;
 using System.Linq;
+using FARMLIFEVR.EVENTSYSTEM;
 
 namespace FARMLIFEVR.LAND
 {
@@ -11,30 +12,48 @@ namespace FARMLIFEVR.LAND
 		#region Private Variables
 
 		[SerializeField] private List<WaterCanal> waterCanals = new List<WaterCanal>();
+		[SerializeField] private float landWaterOddXOffset;
+		[SerializeField] private float landWaterEvenXOffset;
+
 
 		private Coroutine irrigationCouroutine = null;
 
-		[SerializeField] private List<WaterCanal> evenIndexCanal = new List<WaterCanal>();
-		[SerializeField] private List<WaterCanal> oddIndexCanal = new List<WaterCanal>();
+		private List<WaterCanal> evenIndexCanal = new List<WaterCanal>();
+		private List<WaterCanal> oddIndexCanal = new List<WaterCanal>();
 
-		#endregion
 
-		#region Properties
 
-		#endregion
+		private Vector3 evenLandWaterLocalPos = Vector3.zero;
+		private Vector3 oddLandWaterLocalPos = Vector3.zero;
 
-		#region LifeCycle Methods
+        #endregion
 
-		private void Awake()
-		{
+        #region Properties
 
-		}
+        #endregion
 
-		#endregion
+        #region LifeCycle Methods
 
-		#region Private Methods
+        private void OnEnable()
+        {
+			EventManager.StartListening(EventNames.StartIrrigation, Irrigation);
+        }
 
-		private IEnumerator IrrigateWaterCanals()
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventNames.StartIrrigation, Irrigation);
+        }
+        private void Awake()
+        {
+			evenLandWaterLocalPos.x = landWaterEvenXOffset;
+			oddLandWaterLocalPos.x = landWaterOddXOffset;
+			DisableWaterColumnsLandsIndividualWaterBlock();
+        }
+        #endregion
+
+        #region Private Methods
+
+        private IEnumerator IrrigateWaterCanals()
 		{
 			bool isEven = true;
 
@@ -45,13 +64,27 @@ namespace FARMLIFEVR.LAND
 				if (isEven)
 				{
 					evenIndexCanal.Add(waterCanals[i]);
+					waterCanals[i].AlignLandsWaterBlock(evenLandWaterLocalPos);
 					OnEvenIndexListChanged(evenIndexCanal.IndexOf(waterCanals[i]));
 				}
 				else
 				{
 					oddIndexCanal.Add(waterCanals[i]);
-				}
+                    waterCanals[i].AlignLandsWaterBlock(oddLandWaterLocalPos);
+                }
                 yield return new WaitForSeconds(2); // The Wait Seconds Change per No of Elements in Column
+			}
+		}
+
+
+		/// <summary>
+		/// It Disable those Individual Water Blocks belongs to the Land, You Might Think we can reset the Whole Irrigation but we can't reset when its already UnIrrigated
+		/// </summary>
+		private void DisableWaterColumnsLandsIndividualWaterBlock()
+		{
+			foreach (var waterCanal in waterCanals)
+			{
+				waterCanal.DisableIndividualWaterBlocksVisual();
 			}
 		}
 
@@ -105,6 +138,11 @@ namespace FARMLIFEVR.LAND
             return waterCanals.All(x => x.IsGrubbed);
         }
 
+
+		/// <summary>
+		/// It Triggers when Even Index List Changed to Trigger the Irrigating the Individual Water Canal
+		/// </summary>
+		/// <param name="index"></param>
 		private void OnEvenIndexListChanged(int index)
 		{ 
 			WaterCanal evenCanal = evenIndexCanal[index];

@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FARMLIFEVR.STATEMACHINE;
-using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
 using FARMLIFEVR.LAND;
 using QFSW.QC;
 using System.Linq;
+using FARMLIFEVR.SIMPLEINTERACTABLES;
+using FARMLIFEVR.FARMTOOLS;
+using UnityEngine.Assertions;
 
 namespace FARMLIFEVR.CROPS.MAIZE
 {
@@ -17,16 +19,25 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			Seed,
 			Sprouting,
 			WaterNeeded,
-			SmallPlant,
-			MediumPlant,
+			Pest,
+			Fertilizing,
 			PestControl,
-			MaturePlant,
+			ShoutBirds,
 			Harvesting,
 			AfterHarvesting
 		}
 
 		#region Private Variables
 
+		[Header("References")]
+		[Space(3)]
+
+		[SerializeField] [Required] private PipeInteractable pipeInteractable;
+		[SerializeField] [Required] private PesticideSprayerInteractable pesticideSprayerInteractable;
+		[SerializeField] [Required] private Tool_MegaphoneInteractable megaphoneInteractable;
+
+
+		[Space(5)]
 		//Exposed in Editor
 		[SerializeField] private List<Land> landsList = new List<Land>();
 
@@ -49,12 +60,20 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         private void OnEnable()
         {
-			EventManager.StartListening(EventNames.MF_AdvanceToNextState, TransitionToNextState);
+            EventManager.StartListening(EventNames.MF_AdvanceToNextState,TransitionToNextState);
         }
         public override void Awake()
 		{
 			base.Awake();
-			maizeFieldStateContext = new MaizeFieldContext(this,maizesHashSet);
+			maizeFieldStateContext = new MaizeFieldContext(
+				this,
+				maizesHashSet,
+				pipeInteractable,
+				pesticideSprayerInteractable,
+				megaphoneInteractable
+				);
+
+
 			InitializeStates();
 			foreach (Land land in landsList)  // Adding All the Elements in the List to The HashSet for Usage
 			{
@@ -63,9 +82,15 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			}
 		    landsList.Clear();
 		}
+
+        private void OnDestroy()
+        {
+            
+        }
+
         private void OnDisable()
         {
-            EventManager.StopListening(EventNames.MF_AdvanceToNextState, TransitionToNextState);
+            EventManager.StopListening(EventNames.MF_AdvanceToNextState,TransitionToNextState);
         }
 
         public override void Update()
@@ -86,10 +111,10 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			States.Add(EMaizeFieldState.Seed, new MF_SeedState(maizeFieldStateContext, EMaizeFieldState.Seed));
 			States.Add(EMaizeFieldState.Sprouting, new MF_SproutingState(maizeFieldStateContext, EMaizeFieldState.Sprouting));
 			States.Add(EMaizeFieldState.WaterNeeded, new MF_WaterNeededState(maizeFieldStateContext, EMaizeFieldState.WaterNeeded));
-			States.Add(EMaizeFieldState.SmallPlant, new MF_SmallPlantState(maizeFieldStateContext, EMaizeFieldState.SmallPlant));
-			States.Add(EMaizeFieldState.MediumPlant, new MF_MediumPlantState(maizeFieldStateContext, EMaizeFieldState.MediumPlant));
+			States.Add(EMaizeFieldState.Pest, new MF_PestState(maizeFieldStateContext, EMaizeFieldState.Pest));
+			States.Add(EMaizeFieldState.Fertilizing, new MF_FertilizingPlantState(maizeFieldStateContext, EMaizeFieldState.Fertilizing));
 			States.Add(EMaizeFieldState.PestControl, new MF_PestControlState(maizeFieldStateContext, EMaizeFieldState.PestControl));
-			States.Add(EMaizeFieldState.MaturePlant, new MF_MaturePlantState(maizeFieldStateContext, EMaizeFieldState.MaturePlant));
+			States.Add(EMaizeFieldState.ShoutBirds, new MF_ShoutBirdsPlantState(maizeFieldStateContext, EMaizeFieldState.ShoutBirds));
 			States.Add(EMaizeFieldState.Harvesting, new MF_HarvestingState(maizeFieldStateContext, EMaizeFieldState.Harvesting));
 			States.Add(EMaizeFieldState.AfterHarvesting, new MF_AfterHarvestingState(maizeFieldStateContext, EMaizeFieldState.AfterHarvesting));
 
@@ -100,13 +125,13 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
 		//It  will Enable the SeedPlanter Interactable for all The Land in The hashSet.
 		// It Will lead to the Next Task Planting in the Next day.
-		private void EnableSeedPlanterInteractableInLandsHashSet()
+		private void EnableRootInteractableInLandsHashSet()
 		{
-            foreach (Land land in landsHashSet)
-            {
+			foreach (Land land in landsHashSet)
+			{
 				land.EnableSeedPlanterInteractable();
-            }
-        }
+			}
+		}
 
 		#endregion
 
@@ -116,7 +141,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 		[Command]
 		public void PlanterInterctable()
 		{
-			EnableSeedPlanterInteractableInLandsHashSet();
+			EnableRootInteractableInLandsHashSet();
         }
 
 		// Need to be Removed Method
@@ -129,10 +154,38 @@ namespace FARMLIFEVR.CROPS.MAIZE
             }
         }
 
+		[Command]
+		public void Pest()
+		{
+			foreach(Land land in landsHashSet)
+			{
+				land.Maize.IsPestSprayed = true;
+			}
+		}
+
+		[Command]
+		public void Fert()
+		{
+            foreach (Land land in landsHashSet)
+            {
+                land.Maize.IsFertilized = true;
+            }
+        }
+
+		[Command]
+		public void Shout()
+		{
+			megaphoneInteractable.SetMaxShoutCount();
+		}
+
+
         //Overriden Method
         public override void ValidateConstraints() // Validating Refs
         {
 			if (landsList.Count == 0) Debug.LogError("Maizes List is Empty !");
+			Assert.IsNotNull(pipeInteractable, "Pipe Interactable is Null !");
+			Assert.IsNotNull(pesticideSprayerInteractable, "Pesticide Sprayer Interactable is Null!");
+			Assert.IsNotNull(megaphoneInteractable, "Megaphone Interactable is Null!");
         }
 
 		/// <summary>
@@ -153,9 +206,17 @@ namespace FARMLIFEVR.CROPS.MAIZE
 			return CurrentState.GetStateKey() == EMaizeFieldState.WaterNeeded;
 		}
 
+		public void MakeAllSeedsUnplanted()
+		{
+			landsHashSet.ToList().ForEach(land => land.Maize.IsSeedPlanted = false);
+		}
+
+		public void MakeAllPlantsUnFertilized()
+		{
+			landsHashSet.ToList().ForEach(land=>land.Maize.IsFertilized = false);
+		}
 
         #region Conditions to Switch State
-
         public bool IsAllSeedsPlanted()
 		{
 			return landsHashSet.All(land => land.Maize.IsSeedPlanted);
@@ -168,6 +229,19 @@ namespace FARMLIFEVR.CROPS.MAIZE
 		{
 			return landsHashSet.All(x=>x.Maize.IsWatered);
 		}
+		public bool IsAllPlantsFertilized()
+		{
+            return landsHashSet.All(x => x.Maize.IsFertilized);
+        }
+		public bool IsPestSprayedToAllPlants()
+		{
+			return landsHashSet.All(a => a.Maize.IsPestSprayed);
+		}
+		public bool IsMaxBirdShoutCountReached()
+		{
+			return megaphoneInteractable.MaxShoutCountReached;
+		}
+
         #endregion
 
         #endregion

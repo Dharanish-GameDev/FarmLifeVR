@@ -12,6 +12,10 @@ namespace FARMLIFEVR.EVENTSYSTEM
         public const string SwitchDogStateToEmote = "SwitchDogStateToEmote";
         public const string MF_AdvanceToNextState = "MF_AdvanceToNextState";
         public const string MF_OnStateChanged = "MF_OnStageChanged";
+        public const string StartIrrigation = "StartIrrigation";
+        public const string PesticideSprayInteractableSelected = "PesticideSprayInteractableSelected";
+        public const string MaxShoutCountReached = "MaxShoutCountReached";
+        public const string HarvestReadyMaizeCollected = "HarvestReadyMaizeCollected";
     }
 }
 

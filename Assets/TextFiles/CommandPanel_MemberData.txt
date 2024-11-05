@@ -6,6 +6,9 @@ FARMLIFE VR COMMANDS LIST
 2.MaizeFieldStateMachine
 .PlanterInteractable
 .PlantsSeeds
+.Pest
+.Fert
+.Shout
 
 3.IrrigationManager
 .Grub

@@ -1,6 +1,4 @@
 using FARMLIFEVR.EVENTSYSTEM;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +20,8 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         private bool isSeedPlanted = false;
         private bool isWatered = false;
-
+        private bool isPestSprayed =  false;
+        private bool isFertilized = false;
         #endregion
 
         #region Properties
@@ -53,21 +52,33 @@ namespace FARMLIFEVR.CROPS.MAIZE
             }
         }
 
-        private void OnWatered(bool value)
+        public bool IsPestSprayed
         {
-            if (value)
+            get
             {
-                maizeVisuals.WaterNeededUI.SetActive(false);
+                return isPestSprayed;
+            }
+            set
+            {
+                isPestSprayed = value;
+                OnPestSprayed(value);
             }
         }
 
-        private void OnSeedPlanted(bool value)
+        public bool IsFertilized
         {
-            if (value)
+            get
             {
-                EnableVisualFromHashSet(maizeVisuals.SeedVisual);
+                return isFertilized;
+            }
+            set
+            {
+                isFertilized = value;
+                OnFertilized(value);
             }
         }
+
+        public bool isInSeedState => currentMaizeFieldState == MaizeFeildStateMachine.EMaizeFieldState.Seed;
 
         #endregion
 
@@ -94,7 +105,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             if (parameters.Length == 0) return;
             currentMaizeFieldState = (MaizeFeildStateMachine.EMaizeFieldState)parameters[0]; // Getting Current State from the Params
-            print($"{gameObject.name} : Entered {currentMaizeFieldState} State!");
+            //print($"{gameObject.name} : Entered {currentMaizeFieldState} State!");
             switch (currentMaizeFieldState)
             {
                 // Handles Seed State Logic
@@ -116,14 +127,14 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
 
                 // Handles SmallPlant State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.SmallPlant:
-                    SmallPlantState();
+                case MaizeFeildStateMachine.EMaizeFieldState.Pest:
+                    PestState();
                     break;
 
 
                 // Handles MediumPlant State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.MediumPlant:
-                    MediumPlantState();
+                case MaizeFeildStateMachine.EMaizeFieldState.Fertilizing:
+                    FertilizingPlantState();
                     break;
 
 
@@ -134,7 +145,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
 
                 // Handles MaturePlant State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.MaturePlant:
+                case MaizeFeildStateMachine.EMaizeFieldState.ShoutBirds:
                     MaturePlantState();
                     break;
 
@@ -169,13 +180,23 @@ namespace FARMLIFEVR.CROPS.MAIZE
             isWatered = false;
             maizeVisuals.WaterNeededUI.SetActive(true);
         }
-        private void SmallPlantState()
+        private void PestState()
         {
-            EnableVisualFromHashSet(maizeVisuals.SmallPlantVisual);
+            EnableVisualFromHashSet(maizeVisuals.PestPlantVisual);
+            isPestSprayed = false;
+            maizeVisuals.ActualInfectedPart.SetActive(true);
+
+            if (maizeVisuals.InfectedPartsTransform.Length > 0)
+            {
+                int randomIndex = Random.Range(0, maizeVisuals.InfectedPartsTransform.Length - 1);
+                maizeVisuals.ActualInfectedPart.transform.position = maizeVisuals.InfectedPartsTransform[randomIndex].position;
+            }
+
+
         }
-        private void MediumPlantState()
+        private void FertilizingPlantState()
         {
-            EnableVisualFromHashSet(maizeVisuals.MediumPlantVisual);
+            EnableVisualFromHashSet(maizeVisuals.FertilizingPlantVisual);
         }
         private void PestControlState()
         {
@@ -183,7 +204,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         }
         private void MaturePlantState()
         {
-            EnableVisualFromHashSet(maizeVisuals.MaturePlant);
+            EnableVisualFromHashSet(maizeVisuals.ShoutBirdsPlantState);
         }
         private void HarvestingState()
         {
@@ -206,22 +227,58 @@ namespace FARMLIFEVR.CROPS.MAIZE
             visualsHashSet.Add(maizeVisuals.SproutingVisual);
             visualsHashSet.Add(maizeVisuals.WaterNeededVisual);
             visualsHashSet.Add(maizeVisuals.WaterNeededUI);
-            visualsHashSet.Add(maizeVisuals.SmallPlantVisual);
-            visualsHashSet.Add(maizeVisuals.MediumPlantVisual);
+            visualsHashSet.Add(maizeVisuals.PestPlantVisual);
+            visualsHashSet.Add(maizeVisuals.ActualInfectedPart);
+            visualsHashSet.Add(maizeVisuals.FertilizingPlantVisual);
+            visualsHashSet.Add(maizeVisuals.FertilizedAreaVisual);
             visualsHashSet.Add(maizeVisuals.PestControlVisual);
-            visualsHashSet.Add(maizeVisuals.MaturePlant);
+            visualsHashSet.Add(maizeVisuals.ShoutBirdsPlantState);
             visualsHashSet.Add(maizeVisuals.HarvestReady);
             visualsHashSet.Add(maizeVisuals.HarvestReadyMaizeModel);
             visualsHashSet.Add(maizeVisuals.AfterHarvest);
         }
-
-        
-
         private void EnableVisualFromHashSet(GameObject visualToEnable)
         {
             DisableAllVisualInHashSet();
             visualToEnable.SetActive(true);
         }
+
+
+        #region OnPropertyChanged Methods
+
+        private void OnFertilized(bool value)
+        {
+            if (value)
+            {
+                maizeVisuals.FertilizedAreaVisual.SetActive(true); // Enabling the Fertilized area to show the plant is actually fertilized
+            }
+        }
+
+        private void OnPestSprayed(bool value)
+        {
+            if (value)
+            {
+                maizeVisuals.ActualInfectedPart.SetActive(false);
+            }
+        }
+
+        private void OnWatered(bool value)
+        {
+            if (value)
+            {
+                maizeVisuals.WaterNeededUI.SetActive(false);
+            }
+        }
+
+        private void OnSeedPlanted(bool value)
+        {
+            if (value)
+            {
+                EnableVisualFromHashSet(maizeVisuals.SeedVisual);
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -245,12 +302,30 @@ namespace FARMLIFEVR.CROPS.MAIZE
     {
         [SerializeField] [Required] private GameObject seedVisual;
         [SerializeField] [Required] private GameObject sproutingVisual;
+
+        [Space(5)]
+        [Header("Water State Refs")]
+        [Space(3)]
         [SerializeField] [Required] private GameObject waterNeededVisual;
         [SerializeField] [Required] private GameObject waterNeededUI;
-        [SerializeField] [Required] private GameObject smallPlantVisual;
-        [SerializeField] [Required] private GameObject mediumPlantVisual;
+
+        [Space(5)]
+        [Header("Pest State Refs")]
+        [Space(3)]
+        [SerializeField] [Required] private GameObject pestPlantVisual;
+        [SerializeField] [Required] private GameObject actualInfectedPart;
+        [SerializeField] private Transform[] infectedPartsLocation;
+
+        [Space(5)]
+        [Header("Fertilizing State Refs")]
+        [Space(3)]
+        [SerializeField] [Required] private GameObject feritilizingPlantVisual;
+        [SerializeField] [Required] private GameObject feritilizedArea;
+
+        [Space(5)]
+
         [SerializeField] [Required] private GameObject pestControlVisual;
-        [SerializeField] [Required] private GameObject maturePlantVisual;
+        [SerializeField] [Required] private GameObject shoutBirdsPlantVisual;
         [SerializeField] [Required] private GameObject harvestReadyVisual;
         [SerializeField] [Required] private GameObject harvestReadyMaizeModelVisual;
         [SerializeField] [Required] private GameObject afterHarvest;
@@ -261,10 +336,13 @@ namespace FARMLIFEVR.CROPS.MAIZE
         public GameObject SproutingVisual => sproutingVisual;
         public GameObject WaterNeededVisual => waterNeededVisual;
         public GameObject WaterNeededUI => waterNeededUI;
-        public GameObject SmallPlantVisual => smallPlantVisual;
-        public GameObject MediumPlantVisual => mediumPlantVisual;
+        public GameObject PestPlantVisual => pestPlantVisual;
+        public GameObject ActualInfectedPart => actualInfectedPart;
+        public Transform[] InfectedPartsTransform => infectedPartsLocation;
+        public GameObject FertilizingPlantVisual => feritilizingPlantVisual;
+        public GameObject FertilizedAreaVisual => feritilizedArea;
         public GameObject PestControlVisual => pestControlVisual;
-        public GameObject MaturePlant => maturePlantVisual;
+        public GameObject ShoutBirdsPlantState => shoutBirdsPlantVisual;
         public GameObject HarvestReady => harvestReadyVisual;
         public GameObject HarvestReadyMaizeModel => harvestReadyMaizeModelVisual;
         public GameObject AfterHarvest => afterHarvest;

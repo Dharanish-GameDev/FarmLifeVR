@@ -16,7 +16,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.SmallPlant;
+        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.Pest;
 
         #endregion
 
@@ -31,10 +31,12 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered WaterNeeded State </color>");
             EventManager.TriggerEvent(EventNames.MF_OnStateChanged, GetStateKey());
+            maizeFieldContext.PipeInteractable.EnablePipeInteractable();
         }
         public override void ExitState()
         {
             GameManager.Instance.IrrigationManager.ResetWaterCanal();
+            maizeFieldContext.PipeInteractable.ResetPipeInteractable();
         }
         public override void UpdateState()
         {
@@ -65,7 +67,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         public override bool GetHasApprovalToSwitchState()
         {
-            return maizeFieldContext.MaizeFeildStateMachine.IsAllPlantsWatered();
+            return true;//maizeFieldContext.MaizeFeildStateMachine.IsAllPlantsWatered();
         }
 
         #endregion
