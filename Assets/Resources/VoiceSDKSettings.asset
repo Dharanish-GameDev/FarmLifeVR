@@ -32,10 +32,10 @@ MonoBehaviour:
     lang: en
     isPrivate: 1
     createdAt: 2024-08-13T20:59:15-0700
-    trainingStatus: 1
-    lastTrainDuration: 47
-    lastTrainedAt: 2024-08-18T22:09:51-0700
-    nextTrainAt: 2024-08-18T22:09:04-0700
+    trainingStatus: 3
+    lastTrainDuration: 8
+    lastTrainedAt: 2024-12-19T11:52:26-0800
+    nextTrainAt: 2024-12-19T11:52:36-0800
     intents:
     - id: 3930206533969818
       name: call_pet
@@ -44,6 +44,26 @@ MonoBehaviour:
         id: 1198145424847130
       - name: PetName:PetName
         id: 803969141916859
+    - id: 923325883230686
+      name: die
+      entities:
+      - name: Die:Die
+        id: 1690255204865887
+    - id: 1018980826929397
+      name: eat
+      entities:
+      - name: Eat:Eat
+        id: 479583495178960
+    - id: 605332578565520
+      name: sit
+      entities:
+      - name: Sit:Sit
+        id: 942833090614292
+    - id: 1532194390834220
+      name: stand
+      entities:
+      - name: Stand_Up:Stand_Up
+        id: 925724339207721
     entities:
     - name: Calling
       id: 520168714006896
@@ -57,6 +77,57 @@ MonoBehaviour:
       - keyword: Come on
         synonyms:
         - come on
+    - name: Die
+      id: 2294242637612737
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Die
+        id: 1690255204865887
+      keywords:
+      - keyword: Day
+        synonyms:
+        - day
+      - keyword: Die
+        synonyms:
+        - die
+      - keyword: Dye
+        synonyms:
+        - Dye
+      - keyword: Eye
+        synonyms:
+        - eye
+      - keyword: Hey
+        synonyms:
+        - hey
+      - keyword: Hi
+        synonyms:
+        - Hi
+      - keyword: High
+        synonyms:
+        - High
+    - name: Eat
+      id: 945630433629623
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Eat
+        id: 479583495178960
+      keywords:
+      - keyword: Eat
+        synonyms:
+        - eat
+      - keyword: Feed
+        synonyms:
+        - feed
+      - keyword: Heat
+        synonyms:
+        - Heat
+      - keyword: Here
+        synonyms:
+        - Here
     - name: PetName
       id: 1639086913318806
       lookups:
@@ -72,6 +143,57 @@ MonoBehaviour:
       - keyword: Tiger
         synonyms:
         - tiger
+    - name: Sit
+      id: 1657922031743397
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Sit
+        id: 942833090614292
+      keywords:
+      - keyword: Don't
+        synonyms:
+        - don't
+      - keyword: Down
+        synonyms:
+        - Down
+      - keyword: Set
+        synonyms:
+        - Set
+      - keyword: Shit
+        synonyms:
+        - Shit
+      - keyword: Sit
+        synonyms:
+        - sit
+      - keyword: Sit Down
+        synonyms:
+        - Sit Down
+      - keyword: Six
+        synonyms:
+        - Six
+      - keyword: Skip
+        synonyms:
+        - Skip
+    - name: Stand_Up
+      id: 1124965942145394
+      lookups:
+      - free-text
+      - keywords
+      roles:
+      - name: Stand_Up
+        id: 925724339207721
+      keywords:
+      - keyword: Stand
+        synonyms:
+        - stand
+      - keyword: Stand Up
+        synonyms:
+        - Stand Up
+      - keyword: Up
+        synonyms:
+        - Up
     traits: []
     versionTags:
     - name: 1.0

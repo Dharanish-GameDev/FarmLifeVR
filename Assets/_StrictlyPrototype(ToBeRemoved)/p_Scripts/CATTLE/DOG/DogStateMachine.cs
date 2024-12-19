@@ -58,7 +58,7 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         public DogEmoteState DogEmoteState => States[EDogState.EmoteState] as DogEmoteState;
         public bool isPlayerWithinRange => dogOwnerOverLap.GetIsOverlapping();
-        public bool isInIdleState => CurrentState == States[EDogState.Idle];
+        public bool isInEmoteState => CurrentState == States[EDogState.EmoteState];
         public bool CanSwitchFromEmoteStateToOther
         {
             get
@@ -124,7 +124,7 @@ namespace FARMLIFEVR.CATTLES.DOG
             }
         }
 
-        private void SwitchDogStateToEmoteState()
+        public void SwitchDogStateToEmoteState()
         {
             if (isPlayerWithinRange)
             {

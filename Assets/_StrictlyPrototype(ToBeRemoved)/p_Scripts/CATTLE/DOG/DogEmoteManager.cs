@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,22 @@ namespace FARMLIFEVR.CATTLES.DOG
 
         private bool isEmoteWheelEnabled = false;
 
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventNames.PetSit,PlaySitEmote);
+            EventManager.StartListening(EventNames.PetStandUp,PlayStandUpEmote);
+            EventManager.StartListening(EventNames.PetEat,PlayFeedEmote);
+            EventManager.StartListening(EventNames.PetDie,PlayDieEmote);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventNames.PetSit,PlaySitEmote);
+            EventManager.StopListening(EventNames.PetStandUp,PlayStandUpEmote);
+            EventManager.StopListening(EventNames.PetEat,PlayFeedEmote);
+            EventManager.StopListening(EventNames.PetDie,PlayDieEmote);
+        }
+
         private void Start()
         {
             ValidateConstraints();
@@ -49,30 +66,66 @@ namespace FARMLIFEVR.CATTLES.DOG
             // SitDown Emote
             sitDownEmote_Btn.onClick.AddListener(() =>
             {
-                dogStateMachine.DogEmoteState.PlayDogSitDownEmote();
+                
+                PlaySitEmote();
             });
 
             // Stand Up Emote
             standUpEmote_Btn.onClick.AddListener(() =>
             {
-                dogStateMachine.DogEmoteState.PlayDogStandUpEmote();
+                PlayStandUpEmote();
             });
 
             // Die Emote 
             dieEmote_Btn.onClick.AddListener(() =>
             {
-                dogStateMachine.DogEmoteState.PlayDogDieEmote();
+                PlayDieEmote();
             });
 
             // Feed Emote
             feedEmote_Btn.onClick.AddListener(() =>
             {
-                dogStateMachine.DogEmoteState.PlayDogFeedingEmote();
+                PlayFeedEmote();
             });
 
             emoteUIObject.SetActive(false);
         }
 
+        private void PlaySitEmote()
+        {
+            CheckEmoteState();
+            dogStateMachine.DogEmoteState.PlayDogSitDownEmote();
+            Debug.Log("<color=blue>SitDown Called! </color>");
+        }
+
+        private void PlayStandUpEmote()
+        {
+            CheckEmoteState();
+            dogStateMachine.DogEmoteState.PlayDogStandUpEmote();
+            Debug.Log("<color=yellow>StandUp Called! </color>");
+        }
+
+        private void PlayDieEmote()
+        {
+            CheckEmoteState();
+            dogStateMachine.DogEmoteState.PlayDogDieEmote();
+            Debug.Log("<color=black>Die Called! </color>");
+        }
+
+        private void PlayFeedEmote()
+        {
+            CheckEmoteState();
+            dogStateMachine.DogEmoteState.PlayDogFeedingEmote();
+            Debug.Log("<color=green>Eat Called! </color>");
+        }
+
+        private void CheckEmoteState()
+        {
+            if (!dogStateMachine.isInEmoteState)
+            {
+                dogStateMachine.SwitchDogStateToEmoteState();
+            }
+        }
         #endregion
 
 
