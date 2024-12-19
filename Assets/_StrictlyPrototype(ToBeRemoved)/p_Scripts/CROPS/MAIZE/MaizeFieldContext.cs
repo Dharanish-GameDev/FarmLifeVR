@@ -10,7 +10,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 		#region Private Variables
 
 		//Refs
-		private MaizeFeildStateMachine maizeFieldStateMachine;
+		private MaizeFieldStateMachine maizeFieldStateMachine;
 		private HashSet<Maize> maizesHashSet;
 		private PipeInteractable pipeInteractable;
 		private PesticideSprayerInteractable pesticideSprayerInteractable;
@@ -22,7 +22,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         public MaizeFieldContext
 			(
-            MaizeFeildStateMachine maizeFieldStateMachine,
+            MaizeFieldStateMachine maizeFieldStateMachine,
 			HashSet<Maize> maizesHashSet,
 			PipeInteractable pipeInteractable,
 			PesticideSprayerInteractable pesticideSprayerInteractable,
@@ -38,7 +38,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
 		#region Properties
 
-		public MaizeFeildStateMachine MaizeFeildStateMachine => maizeFieldStateMachine;
+		public MaizeFieldStateMachine MaizeFieldStateMachine => maizeFieldStateMachine;
 		public HashSet<Maize> MaizesHashSet => maizesHashSet;
 		public PipeInteractable PipeInteractable => pipeInteractable;
 		public PesticideSprayerInteractable PesticideSprayerInteractable => pesticideSprayerInteractable;

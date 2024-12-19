@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using FARMLIFEVR.SIMPLEINTERACTABLES;
+using UnityEngine.Serialization;
 
 
 namespace FARMLIFEVR.LAND
@@ -14,7 +15,6 @@ namespace FARMLIFEVR.LAND
         #region Private Variables
 
         // Editor Exposed
-        [SerializeField][Required] private Renderer Renderer;
         [SerializeField][Required] private Maize maize;
         [SerializeField][Required] private MaizeRootInteractable maizeRootInteractable;
 
@@ -75,31 +75,29 @@ namespace FARMLIFEVR.LAND
 
         private void OnLandStateChanged(LandState landState)
         {
-            switchToMat = landVisuals.SoilMat;
             switch (landState)
             {
                 case LandState.BeforePloughing:
-                    switchToMat = landVisuals.SoilMat;
+                    landVisuals.LandMeshRenderer.enabled = false;
                     maizeRootInteractable.gameObject.SetActive(false);
                     break;
 
                 case LandState.Ploughed:
-                    switchToMat = landVisuals.TilledMat;
+                    landVisuals.LandMeshRenderer.enabled = true;
+                    landVisuals.LandMeshRenderer.material = landVisuals.LandBlockMat;
                     break;
 
                 case LandState.Watered:
-                    switchToMat = landVisuals.WateredMat;
+                    landVisuals.LandMeshRenderer.material = landVisuals.WateredMat;
                     maizeRootInteractable.gameObject.SetActive(false);
                     break;
             }
-            GetComponent<Renderer>().material = switchToMat;
         }
         private void ValidateConstraints()
         {
-            Assert.IsNotNull(landVisuals.SoilMat, $"{this.gameObject.name}'s Soil Material is Null!");
-            Assert.IsNotNull(landVisuals.TilledMat, $"{this.gameObject.name}'s Tilled Material is Null!");
+            Assert.IsNotNull(landVisuals.LandMeshRenderer,$"{this.gameObject.name}'s LandMeshRenderer is Null!");
+            Assert.IsNotNull(landVisuals.LandBlockMat, $"{this.gameObject.name}'s Tilled Material is Null!");
             Assert.IsNotNull(landVisuals.WateredMat, $"{this.gameObject.name}'s Watered Material is Null!");
-            Assert.IsNotNull(Renderer, $"{this.gameObject.name}'s Renderer is Null!");
             Assert.IsNotNull(maize, $"{this.gameObject.name}'s Maize is Null!");
         }
         private void MaizeRootInteractable_OnTriedToInteract()
@@ -189,16 +187,16 @@ namespace FARMLIFEVR.LAND
     [System.Serializable]
     public struct LandVisuals
     {
-        [SerializeField][Required] private Material soilMat;
-        [SerializeField][Required] private Material tilledMat;
+        [SerializeField][Required] private MeshRenderer landMeshRenderer;
+        [SerializeField][Required] private Material landBlockMat;
         [SerializeField][Required] private Material wateredMat;
         [SerializeField][Required] private Transform individualWaterBlock;
 
 
         #region Properties
-        public Material SoilMat => soilMat;
-        public Material TilledMat => tilledMat; 
-        public Material WateredMat => tilledMat;
+        public MeshRenderer LandMeshRenderer => landMeshRenderer;
+        public Material LandBlockMat => landBlockMat; 
+        public Material WateredMat => wateredMat;
         public Transform IndividualWaterBlock => individualWaterBlock;
 
         #endregion

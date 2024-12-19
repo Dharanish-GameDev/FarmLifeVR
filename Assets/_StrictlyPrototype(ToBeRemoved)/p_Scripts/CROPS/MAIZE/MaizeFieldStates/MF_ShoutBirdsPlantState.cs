@@ -8,14 +8,14 @@ namespace FARMLIFEVR.CROPS.MAIZE
 	public class MF_ShoutBirdsPlantState : MaizeFeildBaseState
 	{
         //Constructor
-        public MF_ShoutBirdsPlantState(MaizeFieldContext context, MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state)
+        public MF_ShoutBirdsPlantState(MaizeFieldContext context, MaizeFieldStateMachine.EMaizeFieldState state) : base(context, state)
         {
             MaizeFieldContext maizeFieldContext = context;
         }
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.Harvesting;
+        private readonly MaizeFieldStateMachine.EMaizeFieldState nextState = MaizeFieldStateMachine.EMaizeFieldState.Harvesting;
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         }
 
-        public override MaizeFeildStateMachine.EMaizeFieldState GetStateKey()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetStateKey()
         {
             return Statekey;
         }
@@ -58,13 +58,13 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
 
         }
-        public override MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetCorrespondingNextState()
         {
             return nextState;
         }
         public override bool GetHasApprovalToSwitchState()
         {
-            return maizeFieldContext.MaizeFeildStateMachine.IsMaxBirdShoutCountReached();
+            return maizeFieldContext.MaizeFieldStateMachine.IsMaxBirdShoutCountReached();
         }
         #endregion
     }

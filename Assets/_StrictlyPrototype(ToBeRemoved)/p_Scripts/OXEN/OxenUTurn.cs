@@ -6,15 +6,15 @@ namespace FARMLIFEVR.OXEN
     public partial class OxenMover
     {
         #region Private Variables
-
+        
         private Sequence uTurnSequence;
         float durationPerWaypoint;
         Vector3 targetPosition;
         Vector3 directionToNextWaypoint;
         Quaternion waypointRotation;
         Quaternion intermediateRotation;
-        float angleStep;
-        float startAngle;
+        private float angleStep;
+        private float startAngle;
 
         #endregion
 

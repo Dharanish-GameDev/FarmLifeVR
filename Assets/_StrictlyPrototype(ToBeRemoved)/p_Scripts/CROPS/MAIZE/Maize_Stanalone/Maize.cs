@@ -9,7 +9,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         #region Private Variables
 
         //Hidden
-        private MaizeFeildStateMachine.EMaizeFieldState currentMaizeFieldState = MaizeFeildStateMachine.EMaizeFieldState.Seed;
+        private MaizeFieldStateMachine.EMaizeFieldState currentMaizeFieldState = MaizeFieldStateMachine.EMaizeFieldState.Seed;
         private readonly HashSet<GameObject> visualsHashSet = new HashSet<GameObject>();
 
 
@@ -78,7 +78,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
             }
         }
 
-        public bool isInSeedState => currentMaizeFieldState == MaizeFeildStateMachine.EMaizeFieldState.Seed;
+        public bool isInSeedState => currentMaizeFieldState == MaizeFieldStateMachine.EMaizeFieldState.Seed;
 
         #endregion
 
@@ -104,60 +104,60 @@ namespace FARMLIFEVR.CROPS.MAIZE
         private void OnMaizeFieldStateChanged(params object[] parameters)
         {
             if (parameters.Length == 0) return;
-            currentMaizeFieldState = (MaizeFeildStateMachine.EMaizeFieldState)parameters[0]; // Getting Current State from the Params
+            currentMaizeFieldState = (MaizeFieldStateMachine.EMaizeFieldState)parameters[0]; // Getting Current State from the Params
             //print($"{gameObject.name} : Entered {currentMaizeFieldState} State!");
             switch (currentMaizeFieldState)
             {
                 // Handles Seed State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.Seed:
+                case MaizeFieldStateMachine.EMaizeFieldState.Seed:
                     SeedState();
                     break;
 
 
                 // Handles Sprouting State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.Sprouting:
+                case MaizeFieldStateMachine.EMaizeFieldState.Sprouting:
                     SproutingState();
                     break;
 
                     
                 // Handles WaterNeeded State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.WaterNeeded:
+                case MaizeFieldStateMachine.EMaizeFieldState.WaterNeeded:
                     WaterNeedState();
                     break;
 
 
                 // Handles SmallPlant State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.Pest:
+                case MaizeFieldStateMachine.EMaizeFieldState.Pest:
                     PestState();
                     break;
 
 
                 // Handles MediumPlant State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.Fertilizing:
+                case MaizeFieldStateMachine.EMaizeFieldState.Fertilizing:
                     FertilizingPlantState();
                     break;
 
 
                 // Handles PestControl State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.PestControl:
+                case MaizeFieldStateMachine.EMaizeFieldState.PestControl:
                     PestControlState();
                     break;
 
 
                 // Handles MaturePlant State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.ShoutBirds:
+                case MaizeFieldStateMachine.EMaizeFieldState.ShoutBirds:
                     MaturePlantState();
                     break;
 
 
                 // Handles Harvesting State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.Harvesting:
+                case MaizeFieldStateMachine.EMaizeFieldState.Harvesting:
                     HarvestingState();
                     break;
 
 
                 // Handles After Harvesting State Logic
-                case MaizeFeildStateMachine.EMaizeFieldState.AfterHarvesting:
+                case MaizeFieldStateMachine.EMaizeFieldState.AfterHarvesting:
                     AfterHarvestingState();
                     break;
 
@@ -189,10 +189,9 @@ namespace FARMLIFEVR.CROPS.MAIZE
             if (maizeVisuals.InfectedPartsTransform.Length > 0)
             {
                 int randomIndex = Random.Range(0, maizeVisuals.InfectedPartsTransform.Length - 1);
-                maizeVisuals.ActualInfectedPart.transform.position = maizeVisuals.InfectedPartsTransform[randomIndex].position;
+                maizeVisuals.ActualInfectedPart.transform.position =
+                    maizeVisuals.InfectedPartsTransform[randomIndex].position;
             }
-
-
         }
         private void FertilizingPlantState()
         {

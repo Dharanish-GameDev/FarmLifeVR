@@ -8,14 +8,14 @@ namespace FARMLIFEVR.CROPS.MAIZE
 	public class MF_PestControlState : MaizeFeildBaseState
 	{
         //Constructor
-        public MF_PestControlState(MaizeFieldContext context, MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state)
+        public MF_PestControlState(MaizeFieldContext context, MaizeFieldStateMachine.EMaizeFieldState state) : base(context, state)
         {
             MaizeFieldContext maizeFieldContext = context;
         }
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.ShoutBirds;
+        private readonly MaizeFieldStateMachine.EMaizeFieldState nextState = MaizeFieldStateMachine.EMaizeFieldState.ShoutBirds;
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         }
 
-        public override MaizeFeildStateMachine.EMaizeFieldState GetStateKey()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetStateKey()
         {
             return Statekey;
         }
@@ -58,7 +58,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
 
         }
-        public override MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetCorrespondingNextState()
         {
             return nextState;
         }

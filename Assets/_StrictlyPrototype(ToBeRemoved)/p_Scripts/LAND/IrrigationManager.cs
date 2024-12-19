@@ -100,7 +100,7 @@ namespace FARMLIFEVR.LAND
 		public void Irrigation()
 		{
 			if (!IsAllCanalsGrubbed()) return;
-			if (!GameManager.Instance.MaizeFeildStateMachine.IsInWaterNeededState()) return;
+			if (!GameManager.Instance.MaizeFieldStateMachine.IsInWaterNeededState()) return;
 			irrigationCouroutine = StartCoroutine(IrrigateWaterCanals());
 		}
 

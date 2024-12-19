@@ -68,7 +68,7 @@ public class PrintUIBuilder : EditorWindow
 
 	private void OnPrintButtonClicked()
 	{
-		MaizeFeildStateMachine maizeStateMachine = maizeFieldStateMachine.value as MaizeFeildStateMachine;
+		MaizeFieldStateMachine maizeStateMachine = maizeFieldStateMachine.value as MaizeFieldStateMachine;
 		if (maizeStateMachine != null)
 		{
 			

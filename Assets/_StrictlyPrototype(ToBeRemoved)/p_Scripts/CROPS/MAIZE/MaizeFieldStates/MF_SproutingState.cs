@@ -9,14 +9,14 @@ namespace FARMLIFEVR.CROPS.MAIZE
 	public class MF_SproutingState : MaizeFeildBaseState
 	{
         //Constructor
-        public MF_SproutingState(MaizeFieldContext context, MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state)
+        public MF_SproutingState(MaizeFieldContext context, MaizeFieldStateMachine.EMaizeFieldState state) : base(context, state)
         {
             MaizeFieldContext maizeFieldContext = context;
         }
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.WaterNeeded;
+        private readonly MaizeFieldStateMachine.EMaizeFieldState nextState = MaizeFieldStateMachine.EMaizeFieldState.WaterNeeded;
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         }
 
-        public override MaizeFeildStateMachine.EMaizeFieldState GetStateKey()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetStateKey()
         {
             return Statekey;
         }
@@ -60,7 +60,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
 
         }
-        public override MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetCorrespondingNextState()
         {
             return nextState;
         }

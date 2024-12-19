@@ -9,12 +9,10 @@ namespace FARMLIFEVR.OXEN
 
         // Editor Exposed
 
-        [Header("Values")]
-        [Space(5)]
-
-        [Tooltip("X Offset for the U-Turn")]
-        [SerializeField] private float uTurnOffset = 2.0f;
-
+        [Header("Values")] [Space(5)] [Tooltip("X Offset for the U-Turn")] 
+        [SerializeField]
+        private float uTurnOffset = 2.0f;
+        
         [Tooltip("Speed of making the U-Turn")]
         [SerializeField]
         [Range(0, 10)] private float turnSpeed = 6.0f;
@@ -47,6 +45,8 @@ namespace FARMLIFEVR.OXEN
 
 
         #endregion
+        
+        public bool IsOxenTurning => isTurning;
 
         #region Private Methods
         private void OxenTurnDetector_OnHit(OxenBoundary obj)

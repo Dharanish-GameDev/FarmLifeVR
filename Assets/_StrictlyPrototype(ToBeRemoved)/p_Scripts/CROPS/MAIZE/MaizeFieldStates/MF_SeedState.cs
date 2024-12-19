@@ -6,14 +6,14 @@ namespace FARMLIFEVR.CROPS.MAIZE
 	public class MF_SeedState : MaizeFeildBaseState
 	{
         //Constructor
-        public MF_SeedState(MaizeFieldContext context,MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state) 
+        public MF_SeedState(MaizeFieldContext context,MaizeFieldStateMachine.EMaizeFieldState state) : base(context, state) 
         {
             MaizeFieldContext maizeFieldContext = context;
         }
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.Sprouting;
+        private readonly MaizeFieldStateMachine.EMaizeFieldState nextState = MaizeFieldStateMachine.EMaizeFieldState.Sprouting;
 
         #endregion
 
@@ -28,7 +28,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered Seed State </color>");
             EventManager.TriggerEvent(EventNames.MF_OnStateChanged,GetStateKey());
-            maizeFieldContext.MaizeFeildStateMachine.MakeAllSeedsUnplanted();
+            maizeFieldContext.MaizeFieldStateMachine.MakeAllSeedsUnplanted();
             maizeFieldContext.PipeInteractable.ResetPipeInteractable();
             maizeFieldContext.PesticideSprayerInteractable.HidePesticideSprayInteractable();
             maizeFieldContext.MegaphoneInteractable.HideMegaphoneInteractable();
@@ -42,7 +42,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 
         }
         
-        public override MaizeFeildStateMachine.EMaizeFieldState GetStateKey()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetStateKey()
         {
             return Statekey;
         }
@@ -59,13 +59,13 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
 
         }
-        public override MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetCorrespondingNextState()
         {
             return nextState;
         }
         public override bool GetHasApprovalToSwitchState()
         {
-            return maizeFieldContext.MaizeFeildStateMachine.IsAllSeedsPlanted(); // If All the Seeds are Planted Give Apporoval to Change to Next State
+            return maizeFieldContext.MaizeFieldStateMachine.IsAllSeedsPlanted(); // If All the Seeds are Planted Give Apporoval to Change to Next State
         }
 
         #endregion

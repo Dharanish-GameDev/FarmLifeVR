@@ -8,14 +8,14 @@ namespace FARMLIFEVR.CROPS.MAIZE
 	public class MF_FertilizingPlantState : MaizeFeildBaseState
 	{
         //Constructor
-        public MF_FertilizingPlantState(MaizeFieldContext context, MaizeFeildStateMachine.EMaizeFieldState state) : base(context, state)
+        public MF_FertilizingPlantState(MaizeFieldContext context, MaizeFieldStateMachine.EMaizeFieldState state) : base(context, state)
         {
             MaizeFieldContext maizeFieldContext = context;
         }
 
         #region Private Variables
 
-        private readonly MaizeFeildStateMachine.EMaizeFieldState nextState = MaizeFeildStateMachine.EMaizeFieldState.PestControl;
+        private readonly MaizeFieldStateMachine.EMaizeFieldState nextState = MaizeFieldStateMachine.EMaizeFieldState.PestControl;
 
         #endregion
 
@@ -30,18 +30,18 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
             Debug.Log("<color=#f4bbff> Maize Field Entered Fertilizing State </color>");
             EventManager.TriggerEvent(EventNames.MF_OnStateChanged, GetStateKey());
-            maizeFieldContext.MaizeFeildStateMachine.PlanterInterctable();
+            maizeFieldContext.MaizeFieldStateMachine.PlanterInteractable();
         }
         public override void ExitState()
         {
-            maizeFieldContext.MaizeFeildStateMachine.MakeAllPlantsUnFertilized();
+            maizeFieldContext.MaizeFieldStateMachine.MakeAllPlantsUnFertilized();
         }
         public override void UpdateState()
         {
 
         }
 
-        public override MaizeFeildStateMachine.EMaizeFieldState GetStateKey()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetStateKey()
         {
             return Statekey;
         }
@@ -58,13 +58,13 @@ namespace FARMLIFEVR.CROPS.MAIZE
         {
 
         }
-        public override MaizeFeildStateMachine.EMaizeFieldState GetCorrespondingNextState()
+        public override MaizeFieldStateMachine.EMaizeFieldState GetCorrespondingNextState()
         {
             return nextState;
         }
         public override bool GetHasApprovalToSwitchState()
         {
-            return maizeFieldContext.MaizeFeildStateMachine.IsAllPlantsFertilized();
+            return maizeFieldContext.MaizeFieldStateMachine.IsAllPlantsFertilized();
         }
         #endregion
     }

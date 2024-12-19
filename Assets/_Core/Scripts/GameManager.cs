@@ -3,6 +3,7 @@ using UnityEngine.Assertions;
 using FARMLIFEVR.EVENTSYSTEM;
 using FARMLIFEVR.LAND;
 using FARMLIFEVR.CROPS.MAIZE;
+using UnityEngine.Serialization;
 
 
 [DefaultExecutionOrder(-2)] // To Execute this class's OnEnable before Anything else
@@ -29,8 +30,9 @@ public class GameManager : MonoBehaviour
 	[Tooltip("Its the Script that controls watering in the Games")]
 	[SerializeField] [Required] private IrrigationManager irrigationManager;
 
+	[FormerlySerializedAs("maizeFeildStateMachine")]
 	[Tooltip("Its the Script that handles all the Maize behaviour in the Game")]
-	[SerializeField] [Required] private MaizeFeildStateMachine maizeFeildStateMachine;
+	[SerializeField] [Required] private MaizeFieldStateMachine maizeFieldStateMachine;
 
 
 	#endregion
@@ -40,7 +42,7 @@ public class GameManager : MonoBehaviour
 	public Transform PlayerTransform => playerTransform;
 	public Transform PetDestinationPoint => petDestinationPoint;
 	public IrrigationManager IrrigationManager => irrigationManager;
-	public MaizeFeildStateMachine MaizeFeildStateMachine => maizeFeildStateMachine;
+	public MaizeFieldStateMachine MaizeFieldStateMachine => maizeFieldStateMachine;
 
     #endregion
 
