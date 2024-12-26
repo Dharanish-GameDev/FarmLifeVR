@@ -32,6 +32,9 @@ namespace FARMLIFEVR.LAND
         #region Properties
 
         public Maize Maize => maize;
+        
+        public bool IsPloughed => landState == LandState.Ploughed;
+        
         public LandState CurrentLandState
         {
             get
@@ -84,6 +87,7 @@ namespace FARMLIFEVR.LAND
 
                 case LandState.Ploughed:
                     landVisuals.LandMeshRenderer.enabled = true;
+                    GameManager.Instance?.MaizeFieldStateMachine?.CheckPlougingMissionConclusion();
                     landVisuals.LandMeshRenderer.material = landVisuals.LandBlockMat;
                     break;
 

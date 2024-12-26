@@ -8,7 +8,6 @@ using QFSW.QC;
 using System.Linq;
 using FARMLIFEVR.SIMPLEINTERACTABLES;
 using FARMLIFEVR.FARMTOOLS;
-using Mono.CSharp;
 using UnityEngine.Assertions;
 
 namespace FARMLIFEVR.CROPS.MAIZE
@@ -89,14 +88,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
             EventManager.StopListening(EventNames.MF_AdvanceToNextState,TransitionToNextState);
         }
 
-        public override void Update()
-		{
-			base.Update();
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-				EventManager.TriggerEvent(EventNames.MF_AdvanceToNextState);
-            }
-        }
+        
         #endregion
 
         #region Private Methods
@@ -197,47 +189,49 @@ namespace FARMLIFEVR.CROPS.MAIZE
             }
         }
 
-		public bool IsInWaterNeededState()
-		{
-			return CurrentState.GetStateKey() == EMaizeFieldState.WaterNeeded;
-		}
-
-		public void MakeAllSeedsUnplanted()
-		{
-			landsHashSet.ToList().ForEach(land => land.Maize.IsSeedPlanted = false);
-		}
-
-		public void MakeAllPlantsUnFertilized()
-		{
-			landsHashSet.ToList().ForEach(land=>land.Maize.IsFertilized = false);
-		}
+		public bool IsInWaterNeededState() => CurrentState.GetStateKey() == EMaizeFieldState.WaterNeeded;
+		public void MakeAllSeedsUnplanted() => landsHashSet.ToList().ForEach(land => land.Maize.IsSeedPlanted = false);
+		public void MakeAllPlantsUnFertilized() => landsHashSet.ToList().ForEach(land=>land.Maize.IsFertilized = false);
 
         #region Conditions to Switch State
-        public bool IsAllSeedsPlanted()
-		{
-			return landsHashSet.All(land => land.Maize.IsSeedPlanted);
-		}
-		public bool IsAllWaterCanalsGrubbed()
-		{
-			return GameManager.Instance.IrrigationManager.IsAllCanalsGrubbed();
-		}
-		public bool IsAllPlantsWatered()
-		{
-			return landsHashSet.All(x=>x.Maize.IsWatered);
-		}
-		public bool IsAllPlantsFertilized()
-		{
-            return landsHashSet.All(x => x.Maize.IsFertilized);
-        }
-		public bool IsPestSprayedToAllPlants()
-		{
-			return landsHashSet.All(a => a.Maize.IsPestSprayed);
-		}
-		public bool IsMaxBirdShoutCountReached()
-		{
-			return megaphoneInteractable.MaxShoutCountReached;
-		}
 
+        public bool IsAllLandBlocksPloughed() =>landsHashSet.All(land => land.IsPloughed);
+        public bool IsAllSeedsPlanted() => landsHashSet.All(land => land.Maize.IsSeedPlanted);
+		public bool IsAllWaterCanalsGrubbed() => GameManager.Instance.IrrigationManager.IsAllCanalsGrubbed();
+		public bool IsAllPlantsWatered() => landsHashSet.All(x=>x.Maize.IsWatered);
+		public bool IsAllPlantsFertilized() => landsHashSet.All(x => x.Maize.IsFertilized);
+		public bool IsPestSprayedToAllPlants() => landsHashSet.All(a => a.Maize.IsPestSprayed);
+		public bool IsMaxBirdShoutCountReached() => megaphoneInteractable.MaxShoutCountReached;
+        #endregion
+
+        #region CheckTaskCompletion Methods
+
+        private void FireMissionConclusionEvent() => EventManager.TriggerEvent(EventNames.MissionCompleted);
+        
+        // Checked In Land Script
+        public void CheckPlougingMissionConclusion()
+        {
+	        if(IsAllLandBlocksPloughed()) FireMissionConclusionEvent();
+        }
+
+        
+        // Checked in Individual Maize's Script
+        public void CheckAllSeedsPlanted()
+        {
+	        if (IsAllSeedsPlanted()) FireMissionConclusionEvent();
+        }
+
+        // Checked in Individual Water canal
+        public void CheckAllWaterCanalsGrubbed()
+        {
+	        if (IsAllWaterCanalsGrubbed()) FireMissionConclusionEvent();
+        }
+
+        public void CheckAllPlantsWatered()
+        {
+	        if (IsAllPlantsWatered()) FireMissionConclusionEvent();
+        }
+        
         #endregion
 
         #endregion

@@ -71,7 +71,8 @@ namespace FARMLIFEVR.LAND
             ChangeMaterial(grubbedMat);
             gameObject.layer = invalidLayerMask; // Its To Avoid Further OverLapping Registed
             currentHit = 0;
-
+            if(isGrubbed)
+                GameManager.Instance?.MaizeFieldStateMachine?.CheckAllWaterCanalsGrubbed();
         }
 
         /// <summary>

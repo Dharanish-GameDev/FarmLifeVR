@@ -13,3 +13,6 @@ FARMLIFE VR COMMANDS LIST
 3.IrrigationManager
 .Grub
 .Irrigation
+
+4.MissionManager
+.OnMissionCompletedByPlayer

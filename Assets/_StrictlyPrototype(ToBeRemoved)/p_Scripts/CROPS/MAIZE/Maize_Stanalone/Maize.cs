@@ -266,6 +266,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
             if (value)
             {
                 maizeVisuals.WaterNeededUI.SetActive(false);
+                GameManager.Instance?.MaizeFieldStateMachine.CheckAllPlantsWatered();
             }
         }
 
@@ -274,6 +275,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
             if (value)
             {
                 EnableVisualFromHashSet(maizeVisuals.SeedVisual);
+                GameManager.Instance?.MaizeFieldStateMachine?.CheckAllSeedsPlanted();
             }
         }
 
