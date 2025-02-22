@@ -47,6 +47,8 @@ namespace FARMLIFEVR.EVENTSYSTEM
         // Player Locomotion related
         public const string EnableMovement = "EnableMovement";
         public const string DisableMovement = "DisableMovement";
+        public const string AfterMissionTeleport = "AfterMissionTeleport";
+        public const string SetGravity = "SetGravity";
         
         
         //Fading Screen Related

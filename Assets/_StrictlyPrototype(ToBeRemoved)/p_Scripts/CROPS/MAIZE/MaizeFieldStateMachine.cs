@@ -35,6 +35,7 @@ namespace FARMLIFEVR.CROPS.MAIZE
 		[SerializeField,Required] private PipeInteractable pipeInteractable;
 		[SerializeField,Required] private PesticideSprayerInteractable pesticideSprayerInteractable;
 		[SerializeField,Required] private Tool_MegaphoneInteractable megaphoneInteractable;
+		[SerializeField,Required] private GameObject oxen;
 
 
 		[Space(5)]

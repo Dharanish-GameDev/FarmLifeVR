@@ -111,6 +111,10 @@ public class MissionManager : MonoBehaviour
     {
         missionStartedDetector.EnableAndDisableMissionStartedDetector(false);
         EventManager.TriggerEvent(EventNames.MakeItDay);
+        if (missionIndex == 0)
+        {
+            
+        }
         Debug.Log("<color=green>OnMissionStartedByPlayer</color>");
     }
 
@@ -119,6 +123,7 @@ public class MissionManager : MonoBehaviour
     {
         Debug.Log("<color=magenta>OnMissionCompletedByPlayer</color>");
         EventManager.TriggerEvent(EventNames.MakeItEvening);
+        EventManager.TriggerEvent(EventNames.AfterMissionTeleport);
         dayEndingChecker.SetVisibility(true);
         EventManager.TriggerEvent(GetCurrentConcEventName());
     }

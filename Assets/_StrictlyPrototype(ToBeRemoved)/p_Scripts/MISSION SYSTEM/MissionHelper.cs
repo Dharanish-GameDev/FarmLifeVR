@@ -1,11 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FARMLIFEVR.CROPS.MAIZE;
 using FARMLIFEVR.EVENTSYSTEM;
+using FARMLIFEVR.OXEN;
+using FARMLIFEVR.SIMPLEINTERACTABLES;
+using QFSW.QC;
 using UnityEngine;
 
 public class MissionHelper : MonoBehaviour
 {
+   [SerializeField,Required] private GameObject oxen;
+   [SerializeField,Required] private MaizeFieldStateMachine maizeFieldStateMachine;
+   [SerializeField,Required] private GameObject grubberObj;
+   [SerializeField,Required] private PipeInteractable pipeInteractable;
+   
+   
    private void OnEnable()
    {
       // Prep Events
@@ -41,11 +51,19 @@ public class MissionHelper : MonoBehaviour
    private void PrepareForPloughing()
    {
       Debug.Log("<color=yellow>Preparing for Ploughing!</color>");
+      oxen.SetActive(true);
    }
 
    private void ConcludePloughing()
    {
       Debug.Log("<color=red>Concluding Ploughing!</color>");
+      oxen.SetActive(false);
+   }
+
+   [Command]
+   public void EnableOxenMover()
+   {
+      oxen.GetComponent<OxenMover>().enabled = true;
    }
 
    #endregion
@@ -55,6 +73,8 @@ public class MissionHelper : MonoBehaviour
    private void PrepareForPlanting()
    {
       Debug.Log("<color=yellow>Preparing for Planting!</color>");
+      
+      maizeFieldStateMachine.PlanterInteractable();
    }
 
    private void ConcludePlanting()
@@ -70,11 +90,13 @@ public class MissionHelper : MonoBehaviour
    {
       EventManager.TriggerEvent(EventNames.MF_AdvanceToNextState);
       Debug.Log("<color=yellow>Preparing for Water Canal Grubbing!</color>");
+      grubberObj.SetActive(true);
    }
 
    private void ConcludeWaterCanalGrubbing()
    {
       Debug.Log("<color=red>Concluding Canal Grubbing!</color>");
+      grubberObj.SetActive(false);
    }
 
    #endregion
@@ -85,11 +107,13 @@ public class MissionHelper : MonoBehaviour
    {
       EventManager.TriggerEvent(EventNames.MF_AdvanceToNextState);
       Debug.Log("<color=yellow>Preparing for Watering Plants!</color>");
+      pipeInteractable.enabled = true;
    }
 
    private void ConcludeWateringPlants()
    {
       Debug.Log("<color=red>Concluding Watering Plants!</color>");
+      pipeInteractable.enabled = false;
    }
 
    #endregion
